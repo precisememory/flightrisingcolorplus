@@ -40,15 +40,41 @@
 						<p>Your browser doesn't support local storage. You will have limited functionality until you switch to a more recent browser.</p>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">OK</button>
+						<button type="button" class="btn btn-default" id="more-info-btn">More information</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+					</div>
+				</div>
+			  </div>
+			</div>
+			
+			<!--Modal dialog for more file storage info-->
+			<div class="modal fade" id="storage2" tabindex="-1" role="dialog" aria-labelledby="Local storage modal 2" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Browsers which support local storage</h4>
+					</div>
+					<div class="modal-body">
+						<ul>
+							<li>Internet Explorer 8+</li>
+							<li>Firefox 3.5+</li>
+							<li>Safari 4.0+</li>
+							<li>Chrome 4.0+</li>
+							<li>Opera 10.5+</li>
+							<li>iPhone 2.0+</li>
+							<li>Android 2.0+</li>
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
 					</div>
 				</div>
 			  </div>
 			</div>
 		
 		
-			<!--Modal dialog shows if no dragons-->
+			<!--Modal dialog shows if storage but no dragons-->
 			<div class="modal fade" id="firstrun" tabindex="-1" role="dialog" aria-labelledby="First run modal" aria-hidden="true">
 			  <div class="modal-dialog modal-lg">
 				<div class="modal-content">
@@ -64,14 +90,55 @@
 						</ol>
 					</div>
 					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="manual-add-btn">Add manually</button>
+						<button type="button" class="btn btn-primary" id="file-add-btn">Add from file</button>
+					</div>
+				</div>
+			  </div>
+			</div>
+			
+			<!--File choice box to read in dragon file-->
+			<div class="modal fade" id="file-add" tabindex="-1" role="dialog" aria-labelledby="File add modal" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Add dragons from file</h4>
+					</div>
+					<div class="modal-body">
+						<form action="">		
+							<label for="file-input" id="file-input-label">Enter a file</label>
+							<input type="file" id="file-input" />
+						</form>
+					</div>
+					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-						<button type="button" class="btn btn-primary">Add manually</button>
-						<button type="button" class="btn btn-primary">Add from file</button>
+						<button type="button" class="btn btn-primary" id="file-add-btn2" >Add from file</button>
+					</div>
+				</div>
+			  </div>
+			</div>
+			
+			<!--Modal for manually adding dragons-->
+			<div class="modal fade" id="mauual-add" tabindex="-1" role="dialog" aria-labelledby="Manual add modal" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Add dragons manually</h4>
+					</div>
+					<div class="modal-body">
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Save this dragon and close</button>
+						<button type="button" class="btn btn-primary" id="fileadd">Save and add more dragons</button>
 					</div>
 				</div>
 			  </div>
 			</div>
 		
+			<!--Main body of page-->
 			<div class="col-xs-12 col-sm-9">
 			  <p class="pull-right visible-xs">
 				<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle list</button>
