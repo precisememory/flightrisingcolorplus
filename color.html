@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flight Rising Color+</title>
+
+    <!-- Bootstrap -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	
+	<!--mine-->
+	<link href="color.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+	<div class="container">
+		<div id="header">
+			<h1>Flight Rising Color+</h1>
+		</div>
+		
+		<div class="row row-offcanvas row-offcanvas-right">
+		
+		<div id="info">
+			<!--Modal dialog if no local storage-->
+			<div class="modal fade" id="storage" tabindex="-1" role="dialog" aria-labelledby="Local storage modal" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">No storage found!</h4>
+					</div>
+					<div class="modal-body">
+						<p>Your browser doesn't support local storage. You will have limited functionality until you switch to a more recent browser.</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">OK</button>
+					</div>
+				</div>
+			  </div>
+			</div>
+		
+		
+			<!--Modal dialog shows if no dragons-->
+			<div class="modal fade" id="firstrun" tabindex="-1" role="dialog" aria-labelledby="First run modal" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">No dragons found!</h4>
+					</div>
+					<div class="modal-body">
+						<p>You don't appear to have any dragons in your browser's local storage. You can:</p>
+						<ol>
+							<li>Add dragons manually</li>
+							<li>Add dragons from saved file</li>
+						</ol>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Add manually</button>
+						<button type="button" class="btn btn-primary">Add from file</button>
+					</div>
+				</div>
+			  </div>
+			</div>
+		
+			<div class="col-xs-12 col-sm-9">
+			  <p class="pull-right visible-xs">
+				<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle list</button>
+			  </p>
+			  <div class="row">
+				<div class="col-6 col-sm-6 col-lg-4">
+				  <h2>Dragon 1</h2>
+				  <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+				  <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+				</div><!--/span-->
+				<div class="col-6 col-sm-6 col-lg-4">
+				  <h2>Dragon 2</h2>
+				  <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+				  <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+				</div><!--/span-->
+			  </div><!--/row-->
+			</div><!--/span-->
+		</div> <!--/info-->
+		
+		<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+			<div class="list-group">
+				<div class="list-group-item" id="dragon1">
+					<h3>Name 1</h3>
+					<ul>
+						<li>Primary</li>
+						<li>Secondary</li>
+						<li>Tertiary</li>
+					</ul>
+				</div>
+				<div class="list-group-item active" id="dragon2">
+					<h3>Name 2</h3>
+					<ul>
+						<li>Primary</li>
+						<li>Secondary</li>
+						<li>Tertiary</li>
+					</ul>
+				</div>
+				<div class="list-group-item active" id="dragon3">
+					<h3>Name 3</h3>
+					<ul>
+						<li>Primary</li>
+						<li>Secondary</li>
+						<li>Tertiary</li>
+					</ul>
+				</div>
+				<div class="list-group-item" id="dragon4">
+					<h3>Name 4</h3>
+					<ul>
+						<li>Primary</li>
+						<li>Secondary</li>
+						<li>Tertiary</li>
+					</ul>
+				</div> <!--/items-->
+			</div><!--/group-->
+		</div><!--/sidebar-->
+	</div> <!--/row-->
+	
+	<footer>
+		<p>Made by @<a href="http://twitter.com/precisememory" title="Twitter">precisememory</a> (#<a href="http://flightrising.com/main.php?p=lair&tab=userpage&id=45101" title="Flight Rising">45101</a>)</p>
+	</footer>
+	
+	</div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="color.js"></script>
+  </body>
+</html>
