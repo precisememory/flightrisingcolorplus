@@ -300,10 +300,12 @@ function calculateSpread(index1, index2){
 		if(index1 == highi){
 			for(var i = 0; i < ((hex.length - highi) + lowi) + 1; i++){
 				arr[i] = (highi + i) % hex.length;
+				if(arr[i] < 0) arr[i] += hex.length;
 			}
 		} else {
 			for(var i = 0; i < lowi + hex.length - highi + 1+ 1; i++){
 				arr[i] = (lowi - i) % hex.length;
+				if(arr[i] < 0) arr[i] += hex.length;
 			}
 		}
 	} else { //simple cases
