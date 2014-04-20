@@ -112,7 +112,26 @@ function femaleUpdateCenter(dragon, that){
 				updateSpreads();
 			}
 		} else {
-			$('#female-dragon').html('<h2>' + 
+			removeCenter(1);
+		}
+}
+
+function removeCenter(sex){
+	if(sex == 0){
+		male = undefined;
+		$('#male-dragon').html('<h2>' + 
+						"Dragon 1" + 
+						' (M)</h2><ul><li>' + 
+						'Primary' + 
+						'</li><li>' +
+						'Secondary' + 
+						'</li><li>' + 
+						'Tertiary' + 
+						'</li></ul>'
+			);
+	} else {
+		female = undefined;
+		$('#female-dragon').html('<h2>' + 
 						"Dragon 2" + 
 						' (F)</h2><ul><li>' + 
 						'Primary' + 
@@ -122,7 +141,7 @@ function femaleUpdateCenter(dragon, that){
 						'Tertiary' + 
 						'</li></ul>'
 			);
-		}
+	}
 }
 
 function maleUpdateCenter(dragon, that){
@@ -178,16 +197,7 @@ function maleUpdateCenter(dragon, that){
 				updateSpreads();
 			}
 		} else {
-			$('#male-dragon').html('<h2>' + 
-						"Dragon 1" + 
-						' (M)</h2><ul><li>' + 
-						'Primary' + 
-						'</li><li>' +
-						'Secondary' + 
-						'</li><li>' + 
-						'Tertiary' + 
-						'</li></ul>'
-			);
+			removeCenter(0);
 		}
  }
 
@@ -210,6 +220,9 @@ function saveDragon(){
 	} else {
 		//we are editing
 		dragon.location = editIndex;
+		if(objectarray[editIndex].sex != dragon.sex){
+			removeCenter(objectarray[editIndex].sex);	
+		}
 		objectarray[editIndex] = dragon;
 		editIndex = -1;
 		storeDragons();
@@ -218,69 +231,9 @@ function saveDragon(){
 		if(dragon.sex == 0){
 			maleUpdateCenter(dragon, this);
 		} else {
-			if(!fSelected){
-				fSelected = true;
-				$(this).toggleClass('active');
-			} else if($(this).hasClass('active')){
-				fSelected = false;
-				$(this).removeClass('active');
-			}else { //another was selected before
-				$('.female.active').removeClass('active');
-				$(this).addClass('active');
-			}
+			femaleUpdateCenter(dragon, this);
 			
-			if($(this).hasClass('active')){
-				female = dragon;
-			
-				//set the main dragon html
-				$('#female-dragon').html('<h2>' + 
-							female.name + 
-							' (F)</h2><ul><li id="female-p">Primary: ' + 
-							colors[female.p] + 
-							'</li><li id="female-s">Secondary: ' +
-							colors[female.s] + 
-							'</li><li id="female-t">Tertiary: ' + 
-							colors[female.t] + 
-							'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
-				);
-				$('#female-edit').click(function(){
-					editIndex = female.location;
-					editDragon(female);
-				});
-				$('#female-delete').click(function(){
-					deleteDragon(female);
-				});
-				$('#female-p').css('color',hex[female.p]);
-				$('#female-s').css('color',hex[female.s]);
-				$('#female-t').css('color',hex[female.t]);
-				
-				if(calculateLuminosity(hex[female.p]) > 80)
-					$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-				
-				if(calculateLuminosity(hex[female.s]) > 80)
-					$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-				
-				if(calculateLuminosity(hex[female.t]) > 80)
-					$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-					
-				
-				
-				if(mSelected && fSelected){
-					updateSpreads();
-				}
-			} else {
-				$('#female-dragon').html('<h2>' + 
-							"Dragon 2" + 
-							' (F)</h2><ul><li>' + 
-							'Primary' + 
-							'</li><li>' +
-							'Secondary' + 
-							'</li><li>' + 
-							'Tertiary' + 
-							'</li></ul>'
-				);
-			}
-		  }
+		 }
 	}
 }
 
