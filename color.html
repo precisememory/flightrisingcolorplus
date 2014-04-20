@@ -177,6 +177,25 @@
 				</div>
 			  </div>
 			</div>
+			
+			<!--Modal dialog shows if about to delete-->
+			<div class="modal fade" id="delete-warning" tabindex="-1" role="dialog" aria-labelledby="Delete warning modal" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">Are you sure you want to delete?</h4>
+					</div>
+					<div class="modal-body">
+						<p>You'll have to manually reenter all data for this dragon to get it back. </p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" id="close-delete-btn" data-dismiss="modal">Never mind</button>
+						<button type="button" class="btn btn-danger" id="really-delete-btn" data-dismiss="modal">Delete</button>
+					</div>
+				</div>
+			  </div>
+			</div>
 		
 			<!--Main body of page-->
 			<div class="col-xs-12 col-sm-9" id="page-center">

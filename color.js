@@ -22,6 +22,7 @@ var objectarray = new Array(); //contains all a user's dragons
 var mSelected = false, fSelected = true; //only select one male/one female dragon at a time -- checks if this is true
 var male, female; //the dragons to breed
 var editIndex = -1; //index of dragon we are editing, or -1
+var deleteMale = false; // checked only when deleting. false is delete female, true is delete male. 
 
 
 $(document).ready(function () {
@@ -42,7 +43,7 @@ $(document).ready(function () {
   $('#manual-add-btn2').click(manualAdd);
   $('#save-manual-add1').click(saveDragon);
   $('#save-manual-add2').click(saveDragon);
-
+  $('#really-delete-btn').click(deleteDragon);
   
   $('#more-info-btn').click(function(){
 	$('#storage').modal('hide');
@@ -91,7 +92,8 @@ function femaleUpdateCenter(dragon, that){
 				editDragon(female);
 			});
 			$('#female-delete').click(function(){
-				deleteDragon(female);
+				deleteMale = false;
+				$('#delete-warning').modal('show');
 			});
 			$('#female-p').css('color',hex[female.p]);
 			$('#female-s').css('color',hex[female.s]);
@@ -118,7 +120,7 @@ function femaleUpdateCenter(dragon, that){
 
 function removeCenter(sex){
 	if(sex == 0){
-		male = undefined;
+		male = null;
 		$('#male-dragon').html('<h2>' + 
 						"Dragon 1" + 
 						' (M)</h2><ul><li>' + 
@@ -130,7 +132,7 @@ function removeCenter(sex){
 						'</li></ul>'
 			);
 	} else {
-		female = undefined;
+		female = null;
 		$('#female-dragon').html('<h2>' + 
 						"Dragon 2" + 
 						' (F)</h2><ul><li>' + 
@@ -179,7 +181,8 @@ function maleUpdateCenter(dragon, that){
 				editDragon(male);
 			});
 			$('#male-delete').click(function(){
-				deleteDragon(male);
+				deleteMale = true;
+				$('#delete-warning').modal('show');
 			});
 			
 			if(calculateLuminosity(hex[male.p]) > 80)
@@ -237,8 +240,18 @@ function saveDragon(){
 	}
 }
 
-function deleteDragon(dragon){
-
+function deleteDragon(){
+	var dragon;
+	if(deleteMale){
+		dragon = male;
+	} else {
+		dragon = female;
+	}
+	removeCenter(dragon.sex);
+	objectarray.splice(dragon.location, 1);
+	
+	storeDragons();
+	setUpDragons(localStorage.getItem('frcolorplus'));
 }
 
 function colorIndex(name){
@@ -333,8 +346,8 @@ function setUpDragons(string){
 	$('#sidebar-list').html('');
 	numberDragons = 0;
 	for(var i in darray ){
-		//alert(darray[i]);
-		if(darray[i] != ''){
+		if(darray[i] && darray[i] != ''){
+			alert(darray[i]);
 			objectarray[i] = jQuery.parseJSON(darray[i]);
 			objectarray[i].location = i;
 			//alert(objectarray[i].name + " added");
