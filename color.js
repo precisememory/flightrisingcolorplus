@@ -431,7 +431,7 @@ function setOnClickSidebar(){ //this has to be called after all elements added
 function storeDragons(){ 
 	var s = "";
 	for(var i in objectarray){
-		alert(JSON.stringify(objectarray[i]));
+		//alert(JSON.stringify(objectarray[i]));
 		if(objectarray[i]){
 			s = s + JSON.stringify(objectarray[i]) + '\n';
 		}
