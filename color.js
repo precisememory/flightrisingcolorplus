@@ -347,7 +347,7 @@ function setUpDragons(string){
 	numberDragons = 0;
 	for(var i in darray ){
 		if(darray[i] && darray[i] != ''){
-			alert(darray[i]);
+			//alert(darray[i]);
 			objectarray[i] = jQuery.parseJSON(darray[i]);
 			objectarray[i].location = i;
 			//alert(objectarray[i].name + " added");
@@ -429,7 +429,9 @@ function setOnClickSidebar(){ //this has to be called after all elements added
 function storeDragons(){ 
 	var s = "";
 	for(var i in objectarray){
-		s = s + JSON.stringify(objectarray[i]) + '\n';
+		if(objectarray[i]){
+			s = s + JSON.stringify(objectarray[i]) + '\n';
+		}
 	}
 	localStorage.setItem('frcolorplus',s);
 }
