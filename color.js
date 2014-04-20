@@ -21,6 +21,7 @@ var numberDragons = 0; //incremented and used with each dragon
 var objectarray = new Array(); //contains all a user's dragons
 var mSelected = false, fSelected = true; //only select one male/one female dragon at a time -- checks if this is true
 var male, female; //the dragons to breed
+var editIndex = -1; //index of dragon we are editing, or -1
 
 
 $(document).ready(function () {
@@ -58,6 +59,138 @@ $(document).ready(function () {
   
 }); //end document ready
 
+function femaleUpdateCenter(dragon, that){
+
+		if(!fSelected){
+			fSelected = true;
+			$(that).toggleClass('active');
+		} else if($(that).hasClass('active')){
+			fSelected = false;
+			$(that).removeClass('active');
+		}else { //another was selected before
+			$('.female.active').removeClass('active');
+			$(that).addClass('active');
+		}
+		
+		if($(that).hasClass('active')){
+			female = dragon;
+		
+			//set the main dragon html
+			$('#female-dragon').html('<h2>' + 
+						female.name + 
+						' (F)</h2><ul><li id="female-p">Primary: ' + 
+						colors[female.p] + 
+						'</li><li id="female-s">Secondary: ' +
+						colors[female.s] + 
+						'</li><li id="female-t">Tertiary: ' + 
+						colors[female.t] + 
+						'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
+			);
+			$('#female-edit').click(function(){
+				editIndex = female.location;
+				editDragon(female);
+			});
+			$('#female-delete').click(function(){
+				deleteDragon(female);
+			});
+			$('#female-p').css('color',hex[female.p]);
+			$('#female-s').css('color',hex[female.s]);
+			$('#female-t').css('color',hex[female.t]);
+			
+			if(calculateLuminosity(hex[female.p]) > 80)
+				$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[female.s]) > 80)
+				$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[female.t]) > 80)
+				$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+				
+			
+			
+			if(mSelected && fSelected){
+				updateSpreads();
+			}
+		} else {
+			$('#female-dragon').html('<h2>' + 
+						"Dragon 2" + 
+						' (F)</h2><ul><li>' + 
+						'Primary' + 
+						'</li><li>' +
+						'Secondary' + 
+						'</li><li>' + 
+						'Tertiary' + 
+						'</li></ul>'
+			);
+		}
+}
+
+function maleUpdateCenter(dragon, that){
+	if(!mSelected){
+			mSelected = true;
+			$(that).toggleClass('active');
+		} else if($(that).hasClass('active')){
+			mSelected = false;
+			$(that).removeClass('active');
+		} else { //another was selected before
+			$('.male.active').removeClass('active');
+			$(that).addClass('active');
+		}
+		
+		if($(that).hasClass('active')){
+			male = dragon;
+			
+			//set the main dragon html
+			$('#male-dragon').html('<h2>' + 
+						male.name + 
+						' (M)</h2><ul><li id="male-p">Primary: ' + 
+						colors[male.p] + 
+						'</li><li id="male-s">Secondary: ' +
+						colors[male.s] + 
+						'</li><li id="male-t">Tertiary: ' + 
+						colors[male.t] + 
+						'</li></ul><p><button class="btn btn-danger" id="male-delete">Delete</button><button class="btn btn-default" id="male-edit">Edit</button></p>'
+			);
+			$('#male-p').css('color',hex[male.p]);
+			$('#male-s').css('color',hex[male.s]);
+			$('#male-t').css('color',hex[male.t]);
+			
+			$('#male-edit').click(function(){
+				editIndex = male.location;
+				editDragon(male);
+			});
+			$('#male-delete').click(function(){
+				deleteDragon(male);
+			});
+			
+			if(calculateLuminosity(hex[male.p]) > 80)
+				$('#male-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[male.s]) > 80)
+				$('#male-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[male.t]) > 80)
+				$('#male-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+				
+		
+			
+			if(mSelected && fSelected){
+				updateSpreads();
+			}
+		} else {
+			$('#male-dragon').html('<h2>' + 
+						"Dragon 1" + 
+						' (M)</h2><ul><li>' + 
+						'Primary' + 
+						'</li><li>' +
+						'Secondary' + 
+						'</li><li>' + 
+						'Tertiary' + 
+						'</li></ul>'
+			);
+		}
+ }
+
 function saveDragon(){
 	var dragon = new Object();
 	dragon.name = $('#new-name').val();
@@ -65,13 +198,94 @@ function saveDragon(){
 	dragon.p = colorIndex($('#primary-dropdown-button').html());
 	dragon.s = colorIndex($('#secondary-dropdown-button').html());
 	dragon.t = colorIndex($('#tertiary-dropdown-button').html());
-	//then save dragon and add to sidebar
-	alert(JSON.stringify(dragon));
-	var s = localStorage.getItem('frcolorplus') + JSON.stringify(dragon) + '\n';
-	localStorage.setItem('frcolorplus',s);
-	addToSidebar(dragon);
-	addOnClick(dragon);
-	numberDragons = numberDragons + 1;
+	
+	if(editIndex == -1){
+		//then save dragon and add to sidebar
+		//alert(JSON.stringify(dragon));
+		var s = localStorage.getItem('frcolorplus') + JSON.stringify(dragon) + '\n';
+		localStorage.setItem('frcolorplus',s);
+		addToSidebar(dragon);
+		addOnClick(dragon);
+		numberDragons = numberDragons + 1;
+	} else {
+		//we are editing
+		dragon.location = editIndex;
+		objectarray[editIndex] = dragon;
+		editIndex = -1;
+		storeDragons();
+		setUpDragons(localStorage.getItem('frcolorplus'));
+		//update center panel
+		if(dragon.sex == 0){
+			maleUpdateCenter(dragon, this);
+		} else {
+			if(!fSelected){
+				fSelected = true;
+				$(this).toggleClass('active');
+			} else if($(this).hasClass('active')){
+				fSelected = false;
+				$(this).removeClass('active');
+			}else { //another was selected before
+				$('.female.active').removeClass('active');
+				$(this).addClass('active');
+			}
+			
+			if($(this).hasClass('active')){
+				female = dragon;
+			
+				//set the main dragon html
+				$('#female-dragon').html('<h2>' + 
+							female.name + 
+							' (F)</h2><ul><li id="female-p">Primary: ' + 
+							colors[female.p] + 
+							'</li><li id="female-s">Secondary: ' +
+							colors[female.s] + 
+							'</li><li id="female-t">Tertiary: ' + 
+							colors[female.t] + 
+							'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
+				);
+				$('#female-edit').click(function(){
+					editIndex = female.location;
+					editDragon(female);
+				});
+				$('#female-delete').click(function(){
+					deleteDragon(female);
+				});
+				$('#female-p').css('color',hex[female.p]);
+				$('#female-s').css('color',hex[female.s]);
+				$('#female-t').css('color',hex[female.t]);
+				
+				if(calculateLuminosity(hex[female.p]) > 80)
+					$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+				
+				if(calculateLuminosity(hex[female.s]) > 80)
+					$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+				
+				if(calculateLuminosity(hex[female.t]) > 80)
+					$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+					
+				
+				
+				if(mSelected && fSelected){
+					updateSpreads();
+				}
+			} else {
+				$('#female-dragon').html('<h2>' + 
+							"Dragon 2" + 
+							' (F)</h2><ul><li>' + 
+							'Primary' + 
+							'</li><li>' +
+							'Secondary' + 
+							'</li><li>' + 
+							'Tertiary' + 
+							'</li></ul>'
+				);
+			}
+		  }
+	}
+}
+
+function deleteDragon(dragon){
+
 }
 
 function colorIndex(name){
@@ -138,7 +352,7 @@ function calculateSpread(index1, index2){
 		}
 	}
 	
-	alert(JSON.stringify(arr));
+	//alert(JSON.stringify(arr));
 	return arr;
 }
 
@@ -163,10 +377,13 @@ function handleFiles() {
 
 function setUpDragons(string){
 	var darray = string.split('\n');
+	$('#sidebar-list').html('');
+	numberDragons = 0;
 	for(var i in darray ){
 		//alert(darray[i]);
 		if(darray[i] != ''){
 			objectarray[i] = jQuery.parseJSON(darray[i]);
+			objectarray[i].location = i;
 			//alert(objectarray[i].name + " added");
 			addToSidebar(objectarray[i]);
 			numberDragons++;
@@ -219,121 +436,11 @@ function addOnClick(dragon){
 
 	if(dragon.sex == 0){
 	 $('#dragon-' + numberDragons).click(function(){
-		//alert("clicked");
-		if(!mSelected){
-			mSelected = true;
-			$(this).toggleClass('active');
-		} else if($(this).hasClass('active')){
-			mSelected = false;
-			$(this).removeClass('active');
-		} else { //another was selected before
-			$('.male.active').removeClass('active');
-			$(this).addClass('active');
-		}
-		
-		if($(this).hasClass('active')){
-			male = dragon;
-			
-			//set the main dragon html
-			$('#male-dragon').html('<h2>' + 
-						male.name + 
-						' (M)</h2><ul><li id="male-p">Primary: ' + 
-						colors[male.p] + 
-						'</li><li id="male-s">Secondary: ' +
-						colors[male.s] + 
-						'</li><li id="male-t">Tertiary: ' + 
-						colors[male.t] + 
-						'</li></ul><p><button class="btn btn-danger" id="male-delete">Delete</button><button class="btn btn-default" id="male-edit">Edit</button></p>'
-			);
-			$('#male-p').css('color',hex[male.p]);
-			$('#male-s').css('color',hex[male.s]);
-			$('#male-t').css('color',hex[male.t]);
-			
-			if(calculateLuminosity(hex[male.p]) > 80)
-				$('#male-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-			if(calculateLuminosity(hex[male.s]) > 80)
-				$('#male-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-			if(calculateLuminosity(hex[male.t]) > 80)
-				$('#male-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-				
-		
-			
-			if(mSelected && fSelected){
-				updateSpreads();
-			}
-		} else {
-			$('#male-dragon').html('<h2>' + 
-						"Dragon 2" + 
-						' (M)</h2><ul><li>' + 
-						'Primary' + 
-						'</li><li>' +
-						'Secondary' + 
-						'</li><li>' + 
-						'Tertiary' + 
-						'</li></ul>'
-			);
-		}
+		maleUpdateCenter(dragon, this);
 	  });
 	  } else { 
 	  $('#dragon-' + numberDragons).click(function(){
-		//alert("clicked");
-		if(!fSelected){
-			fSelected = true;
-			$(this).toggleClass('active');
-		} else if($(this).hasClass('active')){
-			fSelected = false;
-			$(this).removeClass('active');
-		}else { //another was selected before
-			$('.female.active').removeClass('active');
-			$(this).addClass('active');
-		}
-		
-		if($(this).hasClass('active')){
-			female = dragon;
-		
-			//set the main dragon html
-			$('#female-dragon').html('<h2>' + 
-						female.name + 
-						' (F)</h2><ul><li id="female-p">Primary: ' + 
-						colors[female.p] + 
-						'</li><li id="female-s">Secondary: ' +
-						colors[female.s] + 
-						'</li><li id="female-t">Tertiary: ' + 
-						colors[female.t] + 
-						'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
-			);
-			$('#female-p').css('color',hex[female.p]);
-			$('#female-s').css('color',hex[female.s]);
-			$('#female-t').css('color',hex[female.t]);
-			
-			if(calculateLuminosity(hex[female.p]) > 80)
-				$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-			if(calculateLuminosity(hex[female.s]) > 80)
-				$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-			if(calculateLuminosity(hex[female.t]) > 80)
-				$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-				
-			
-			
-			if(mSelected && fSelected){
-				updateSpreads();
-			}
-		} else {
-			$('#female-dragon').html('<h2>' + 
-						"Dragon 2" + 
-						' (F)</h2><ul><li>' + 
-						'Primary' + 
-						'</li><li>' +
-						'Secondary' + 
-						'</li><li>' + 
-						'Tertiary' + 
-						'</li></ul>'
-			);
-		}
+		femaleUpdateCenter(dragon, this);
 	  });
 	}
 }
@@ -341,125 +448,15 @@ function addOnClick(dragon){
 function setOnClickSidebar(){ //this has to be called after all elements added
 
   $('.male').click(function(){
-	//alert("clicked");
-	if(!mSelected){
-		mSelected = true;
-		$(this).toggleClass('active');
-	} else if($(this).hasClass('active')){
-		mSelected = false;
-		$(this).removeClass('active');
-	} else { //another was selected before
-		$('.male.active').removeClass('active');
-		$(this).addClass('active');
-	}
-	
-	if($(this).hasClass('active')){
-		var n = $(this).attr('id');
-		n = parseInt(n.substring(n.indexOf('-') + 1));
-		male = objectarray[n];
-		
-		//set the main dragon html
-		$('#male-dragon').html('<h2>' + 
-					male.name + 
-					' (M)</h2><ul><li id="male-p">Primary: ' + 
-					colors[male.p] + 
-					'</li><li id="male-s">Secondary: ' +
-					colors[male.s] + 
-					'</li><li id="male-t">Tertiary: ' + 
-					colors[male.t] + 
-					'</li></ul><p><button class="btn btn-danger" id="male-delete">Delete</button><button class="btn btn-default" id="male-edit">Edit</button></p>'
-		);
-		$('#male-p').css('color',hex[male.p]);
-		$('#male-s').css('color',hex[male.s]);
-		$('#male-t').css('color',hex[male.t]);
-		
-		if(calculateLuminosity(hex[male.p]) > 80)
-			$('#male-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-		
-		if(calculateLuminosity(hex[male.s]) > 80)
-			$('#male-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-		
-		if(calculateLuminosity(hex[male.t]) > 80)
-			$('#male-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-	
-		
-		if(mSelected && fSelected){
-			updateSpreads();
-		}
-	} else {
-		$('#male-dragon').html('<h2>' + 
-					"Dragon 2" + 
-					' (M)</h2><ul><li>' + 
-					'Primary' + 
-					'</li><li>' +
-					'Secondary' + 
-					'</li><li>' + 
-					'Tertiary' + 
-					'</li></ul>'
-		);
-	}
+	var n = $(this).attr('id');
+	n = parseInt(n.substring(n.indexOf('-') + 1));
+	maleUpdateCenter(objectarray[n], this);
   });
   
   $('.female').click(function(){
-	//alert("clicked");
-	if(!fSelected){
-		fSelected = true;
-		$(this).toggleClass('active');
-	} else if($(this).hasClass('active')){
-		fSelected = false;
-		$(this).removeClass('active');
-	}else { //another was selected before
-		$('.female.active').removeClass('active');
-		$(this).addClass('active');
-	}
-	
-	if($(this).hasClass('active')){
-		var n = $(this).attr('id');
-		n = parseInt(n.substring(n.indexOf('-') + 1));
-		female = objectarray[n];
-	
-		//set the main dragon html
-		$('#female-dragon').html('<h2>' + 
-					female.name + 
-					' (F)</h2><ul><li id="female-p">Primary: ' + 
-					colors[female.p] + 
-					'</li><li id="female-s">Secondary: ' +
-					colors[female.s] + 
-					'</li><li id="female-t">Tertiary: ' + 
-					colors[female.t] + 
-					'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
-		);
-		$('#female-p').css('color',hex[female.p]);
-		$('#female-s').css('color',hex[female.s]);
-		$('#female-t').css('color',hex[female.t]);
-		
-		if(calculateLuminosity(hex[female.p]) > 80)
-			$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-		
-		if(calculateLuminosity(hex[female.s]) > 80)
-			$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-		
-		if(calculateLuminosity(hex[female.t]) > 80)
-			$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-		
-		
-		if(mSelected && fSelected){
-			updateSpreads();
-		}
-	} else {
-		$('#female-dragon').html('<h2>' + 
-					"Dragon 2" + 
-					' (F)</h2><ul><li>' + 
-					'Primary' + 
-					'</li><li>' +
-					'Secondary' + 
-					'</li><li>' + 
-					'Tertiary' + 
-					'</li></ul>'
-		);
-	}
+	var n = $(this).attr('id');
+	n = parseInt(n.substring(n.indexOf('-') + 1));
+	femaleUpdateCenter(objectarray[n], this);
   });
   
 }
@@ -474,6 +471,56 @@ function storeDragons(){
 function fileAdd(){
 	$('#firstrun').modal('hide');
 	$('#file-add').modal('show');
+}
+
+function editDragon(dragon){
+	$('#new-name').val(dragon.name);
+	dragon.sex == 0 ? $('#sex-dropdown-button').html('M') : $('#sex-dropdown-button').html('F');
+	$('#primary-dropdown-button').html(colors[dragon.p]);
+	$('#primary-dropdown-button').css('background-color', hex[dragon.p]);
+	if(calculateLuminosity(hex[dragon.p]) < 60)
+		$('#primary-dropdown-button').css('color', '#ffffff');
+	
+	$('#secondary-dropdown-button').html(colors[dragon.s]);
+	$('#secondary-dropdown-button').css('background-color', hex[dragon.s]);
+	if(calculateLuminosity(hex[dragon.s]) < 60)
+		$('#secondary-dropdown-button').css('color', '#ffffff');
+		
+	$('#tertiary-dropdown-button').html(colors[dragon.t]);
+	$('#tertiary-dropdown-button').css('background-color', hex[dragon.t]);
+	if(calculateLuminosity(hex[dragon.t]) < 60)
+		$('#tertiary-dropdown-button').css('color', '#ffffff');
+	
+	
+	//and modal stuff
+	//populate dropdowns for manual addition
+	if(!$.trim($('#primary-dropdown-ul').html())){
+		for(var i in colors){
+			$('#primary-dropdown-ul').append('<li id="primary-'+i+'">'+colors[i]+'</li>');
+			$('#primary-' + i).css("background-color", hex[i]);
+
+			$('#secondary-dropdown-ul').append('<li id="secondary-'+i+'">'+colors[i]+'</li>');
+			$('#secondary-' + i).css("background-color", hex[i]);
+			
+			$('#tertiary-dropdown-ul').append('<li id="tertiary-'+i+'">'+colors[i]+'</li>');
+			$('#tertiary-' + i).css("background-color", hex[i]);
+			
+			if(calculateLuminosity(hex[i]) < 60){
+				$('#primary-' +i).css('color', '#ffffff');
+				$('#secondary-' +i).css('color', '#ffffff');
+				$('#tertiary-' +i).css('color', '#ffffff');
+			}
+		}
+	}
+	//now populated, attach onclick
+	$(".dropdown-menu li").click(function(){
+		var selText = $(this).text();
+		var bgcolor = $(this).css("background-color");
+		var color = $(this).css("color");
+		//alert(selText);
+		$(this).parents('.btn-group').find('.dropdown-toggle').html(selText).css("color", color).css("background-color", bgcolor);
+    });
+	$('#manual-add').modal('show');
 }
 
 function manualAdd(){
