@@ -33,11 +33,15 @@ $(document).ready(function () {
 	var blob = new Blob([localStorage.getItem('frcolorplus')], {type: "text/plain;charset=utf-8"});
 	saveAs(blob, "frcolorplus.txt");
   });
+  
  
   $('#file-add-btn').click(fileAdd);
   $('#file-add-btn2').click(handleFiles);
-  $('#manual-add-btn').click(manualAdd);
-  
+  $('#manual-add-btn1').click(manualAdd);  
+  $('#manual-add-btn2').click(manualAdd);
+  $('#save-manual-add1').click(saveDragon);
+  $('#save-manual-add2').click(saveDragon);
+
   
   $('#more-info-btn').click(function(){
 	$('#storage').modal('hide');
@@ -54,60 +58,87 @@ $(document).ready(function () {
   
 }); //end document ready
 
+function saveDragon(){
+	var dragon = new Object();
+	dragon.name = $('#new-name').val();
+	dragon.sex = ($('#sex-dropdown-button').html() == "M") ? 0 : 1;
+	dragon.p = colorIndex($('#primary-dropdown-button').html());
+	dragon.s = colorIndex($('#secondary-dropdown-button').html());
+	dragon.t = colorIndex($('#tertiary-dropdown-button').html());
+	//then save dragon and add to sidebar
+	alert(JSON.stringify(dragon));
+	var s = localStorage.getItem('frcolorplus') + JSON.stringify(dragon) + '\n';
+	localStorage.setItem('frcolorplus',s);
+	addToSidebar(dragon);
+	addOnClick(dragon);
+	numberDragons = numberDragons + 1;
+}
+
+function colorIndex(name){
+	for(var i in colors){
+		if(colors[i] == name) return i;
+	}
+	return -1;
+}
+
 function updateSpreads(){
-	if(male && female){
+	if(male && female && mSelected && fSelected){
 	
-		var primary = calculateSpread(male.p, female.p);
-		var secondary = calculateSpread(male.s, female.s);
-		var tertiary = calculateSpread(male.t, female.t);
+		var prim= calculateSpread(male.p, female.p);
+		var second = calculateSpread(male.s, female.s);
+		var tert = calculateSpread(male.t, female.t);
 		
 		var canvas = document.getElementById("canvas-color-spread");
 		canvas.width = $("#page-center").width();
 		canvas.height = 300;
 		var ctx = canvas.getContext("2d");
-		for(var i = 0; i < primary.length ; i++){
-			ctx.fillStyle = hex[primary[i]];
-			ctx.fillRect(i*(canvas.width / primary.length),0,(i+1)*(canvas.width / primary.length), 100);
+		for(var i = 0; i < prim.length ; i++){
+			ctx.fillStyle = hex[prim[i]];
+			ctx.fillRect(i*(canvas.width / prim.length),0,(i+1)*(canvas.width / prim.length), 100);
 		}
-		for(var i = 0; i < secondary.length ; i++){
-			ctx.fillStyle = hex[secondary[i]];
-			ctx.fillRect(i*(canvas.width / secondary.length),100,(i+1)*(canvas.width / secondary.length),200);
+		for(var i = 0; i < second.length ; i++){
+			ctx.fillStyle = hex[second[i]];
+			ctx.fillRect(i*(canvas.width / second.length),100,(i+1)*(canvas.width / second.length),200);
 		}
-		for(var i = 0; i < tertiary.length ; i++){
-			ctx.fillStyle = hex[tertiary[i]];
-			ctx.fillRect(i*(canvas.width / tertiary.length),200,(i+1)*(canvas.width / tertiary.length),300);
+		for(var i = 0; i < tert.length ; i++){
+			ctx.fillStyle = hex[tert[i]];
+			ctx.fillRect(i*(canvas.width / tert.length),200,(i+1)*(canvas.width / tert.length),300);
 		}
 	}
 }
 
 function calculateSpread(index1, index2){
+	index1 = parseInt(index1);
+	index2 = parseInt(index2);
 	var lowi = index1 > index2 ? index2 : index1;
 	var highi = index1 > index2 ? index1 : index2;
 	var arr = new Array();
 	if(index1 == index2){
 		arr[0] = index1;
 		return arr;
-	} else if( highi - lowi > lowi + hex.length - highi){ //we want to loop over edge of array
+	} else if( highi - lowi > (hex.length - highi) + lowi){ //we want to loop over edge of array
 		if(index1 == highi){
-			for(var i = 0; i < lowi + hex.length - highi; i++){
+			for(var i = 0; i < ((hex.length - highi) + lowi) + 1; i++){
 				arr[i] = (highi + i) % hex.length;
 			}
 		} else {
-			for(var i = 0; i < lowi + hex.length - highi; i++){
+			for(var i = 0; i < lowi + hex.length - highi + 1+ 1; i++){
 				arr[i] = (lowi - i) % hex.length;
 			}
 		}
 	} else { //simple cases
 		if(index1 < index2){
-			for(var i = 0; i < index2 - index1; i++){
+			for(var i = 0; i < index2 - index1 + 1; i++){
 				arr[i] = index1 + i;
 			}
 		} else { //index2 < index1
-			for(var i = 0; i < index1 - index2; i++){
+			for(var i = 0; i < index1 - index2 + 1; i++){
 				arr[i] = index1 - i;
 			}
 		}
 	}
+	
+	alert(JSON.stringify(arr));
 	return arr;
 }
 
@@ -167,8 +198,8 @@ function addToSidebar(dragon){
 	var luma2 = calculateLuminosity(hex[dragon.s]);
 
 	//only do shadow if text is too similar in lightness
-	if(luma1 - luma2 > 40 || luma2 - luma1 > 40){
-		if(luma1 > 40){
+	if(luma1 - luma2 > 60 || luma2 - luma1 > 60){
+		if(luma1 > 60){
 			$('#dragon-' + numberDragons).css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
 		} else {
 			$('#dragon-' + numberDragons).css('text-shadow', '-1px -1px #ffffff, -1px 1px #ffffff, 1px -1px #ffffff, 1px 1px #ffffff'); // black border hopefully increases readability
@@ -183,6 +214,128 @@ function calculateLuminosity(hexcode){
 	var g = (rgb >>  8) & 0xff;  // extract green
 	var b = (rgb >>  0) & 0xff;  // extract blue
 	return 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+}
+function addOnClick(dragon){
+
+	if(dragon.sex == 0){
+	 $('#dragon-' + numberDragons).click(function(){
+		//alert("clicked");
+		if(!mSelected){
+			mSelected = true;
+			$(this).toggleClass('active');
+		} else if($(this).hasClass('active')){
+			mSelected = false;
+			$(this).removeClass('active');
+		} else { //another was selected before
+			$('.male.active').removeClass('active');
+			$(this).addClass('active');
+		}
+		
+		if($(this).hasClass('active')){
+			male = dragon;
+			
+			//set the main dragon html
+			$('#male-dragon').html('<h2>' + 
+						male.name + 
+						' (M)</h2><ul><li id="male-p">Primary: ' + 
+						colors[male.p] + 
+						'</li><li id="male-s">Secondary: ' +
+						colors[male.s] + 
+						'</li><li id="male-t">Tertiary: ' + 
+						colors[male.t] + 
+						'</li></ul><p><button class="btn btn-danger" id="male-delete">Delete</button><button class="btn btn-default" id="male-edit">Edit</button></p>'
+			);
+			$('#male-p').css('color',hex[male.p]);
+			$('#male-s').css('color',hex[male.s]);
+			$('#male-t').css('color',hex[male.t]);
+			
+			if(calculateLuminosity(hex[male.p]) > 80)
+				$('#male-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[male.s]) > 80)
+				$('#male-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[male.t]) > 80)
+				$('#male-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+				
+		
+			
+			if(mSelected && fSelected){
+				updateSpreads();
+			}
+		} else {
+			$('#male-dragon').html('<h2>' + 
+						"Dragon 2" + 
+						' (M)</h2><ul><li>' + 
+						'Primary' + 
+						'</li><li>' +
+						'Secondary' + 
+						'</li><li>' + 
+						'Tertiary' + 
+						'</li></ul>'
+			);
+		}
+	  });
+	  } else { 
+	  $('#dragon-' + numberDragons).click(function(){
+		//alert("clicked");
+		if(!fSelected){
+			fSelected = true;
+			$(this).toggleClass('active');
+		} else if($(this).hasClass('active')){
+			fSelected = false;
+			$(this).removeClass('active');
+		}else { //another was selected before
+			$('.female.active').removeClass('active');
+			$(this).addClass('active');
+		}
+		
+		if($(this).hasClass('active')){
+			female = dragon;
+		
+			//set the main dragon html
+			$('#female-dragon').html('<h2>' + 
+						female.name + 
+						' (F)</h2><ul><li id="female-p">Primary: ' + 
+						colors[female.p] + 
+						'</li><li id="female-s">Secondary: ' +
+						colors[female.s] + 
+						'</li><li id="female-t">Tertiary: ' + 
+						colors[female.t] + 
+						'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
+			);
+			$('#female-p').css('color',hex[female.p]);
+			$('#female-s').css('color',hex[female.s]);
+			$('#female-t').css('color',hex[female.t]);
+			
+			if(calculateLuminosity(hex[female.p]) > 80)
+				$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[female.s]) > 80)
+				$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+			if(calculateLuminosity(hex[female.t]) > 80)
+				$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+				
+			
+			
+			if(mSelected && fSelected){
+				updateSpreads();
+			}
+		} else {
+			$('#female-dragon').html('<h2>' + 
+						"Dragon 2" + 
+						' (F)</h2><ul><li>' + 
+						'Primary' + 
+						'</li><li>' +
+						'Secondary' + 
+						'</li><li>' + 
+						'Tertiary' + 
+						'</li></ul>'
+			);
+		}
+	  });
+	}
 }
 
 function setOnClickSidebar(){ //this has to be called after all elements added
@@ -237,7 +390,7 @@ function setOnClickSidebar(){ //this has to be called after all elements added
 	} else {
 		$('#male-dragon').html('<h2>' + 
 					"Dragon 2" + 
-					' (F)</h2><ul><li>' + 
+					' (M)</h2><ul><li>' + 
 					'Primary' + 
 					'</li><li>' +
 					'Secondary' + 
@@ -324,6 +477,35 @@ function fileAdd(){
 }
 
 function manualAdd(){
+	//alert("going to populate");
+	//populate dropdowns for manual addition
+	if(!$.trim($('#primary-dropdown-ul').html())){
+		for(var i in colors){
+			$('#primary-dropdown-ul').append('<li id="primary-'+i+'">'+colors[i]+'</li>');
+			$('#primary-' + i).css("background-color", hex[i]);
+
+			$('#secondary-dropdown-ul').append('<li id="secondary-'+i+'">'+colors[i]+'</li>');
+			$('#secondary-' + i).css("background-color", hex[i]);
+			
+			$('#tertiary-dropdown-ul').append('<li id="tertiary-'+i+'">'+colors[i]+'</li>');
+			$('#tertiary-' + i).css("background-color", hex[i]);
+			
+			if(calculateLuminosity(hex[i]) < 60){
+				$('#primary-' +i).css('color', '#ffffff');
+				$('#secondary-' +i).css('color', '#ffffff');
+				$('#tertiary-' +i).css('color', '#ffffff');
+			}
+		}
+	}
+	//now populated, attach onclick
+	$(".dropdown-menu li").click(function(){
+		var selText = $(this).text();
+		var bgcolor = $(this).css("background-color");
+		var color = $(this).css("color");
+		//alert(selText);
+		$(this).parents('.btn-group').find('.dropdown-toggle').html(selText).css("color", color).css("background-color", bgcolor);
+    });
+	
 	$('#firstrun').modal('hide');
 	$('#manual-add').modal('show');
 }
