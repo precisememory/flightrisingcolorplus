@@ -17,7 +17,10 @@ var hex = [		'#fffdea',		'#ffffff',	'#dae0f3',	'#c8bece',		'#bbbabf',		'#7e7e7e'
 ];
 
 			
-var numberDragons = 0;
+var numberDragons = 0; //incremented and used with each dragon
+var objectarray = new Array(); //contains all a user's dragons
+var mSelected = false, fSelected = true; //only select one male/one female dragon at a time -- checks if this is true
+var male, female; //the dragons to breed
 
 
 $(document).ready(function () {
@@ -25,14 +28,11 @@ $(document).ready(function () {
   $('[data-toggle=offcanvas]').click(function () {
     $('.row-offcanvas').toggleClass('active')
   });
-//set up dragon storage  
-  
-  var objectarray = new Array();
-  
+ 
+
+ 
   $('#file-add-btn').click(fileAdd);
-  $('#file-add-btn2').click(function(){ //this one's different because takes parameter
-	handleFiles(objectarray);
-  });
+  $('#file-add-btn2').click(handleFiles);
   $('#manual-add-btn').click(manualAdd);
   
   
@@ -46,12 +46,69 @@ $(document).ready(function () {
   } else if(!checkForDragons()){
 	$('#firstrun').modal('show');
   } else { //load dragons from storage
-	setUpDragons(localStorage.getItem('frcolorplus'), objectarray);
+	setUpDragons(localStorage.getItem('frcolorplus'));
   }
   
-});
+}); //end document ready
 
-function handleFiles(objectarray) {
+function updateSpreads(){
+	if(male && female){
+	
+		var primary = calculateSpread(male.p, female.p);
+		var secondary = calculateSpread(male.s, female.s);
+		var tertiary = calculateSpread(male.t, female.t);
+		
+		var canvas = document.getElementById("canvas-color-spread");
+		canvas.width = $("#page-center").width();
+		canvas.height = 300;
+		var ctx = canvas.getContext("2d");
+		for(var i = 0; i < primary.length ; i++){
+			ctx.fillStyle = hex[primary[i]];
+			ctx.fillRect(i*(canvas.width / primary.length),0,(i+1)*(canvas.width / primary.length), 100);
+		}
+		for(var i = 0; i < secondary.length ; i++){
+			ctx.fillStyle = hex[secondary[i]];
+			ctx.fillRect(i*(canvas.width / secondary.length),100,(i+1)*(canvas.width / secondary.length),200);
+		}
+		for(var i = 0; i < tertiary.length ; i++){
+			ctx.fillStyle = hex[tertiary[i]];
+			ctx.fillRect(i*(canvas.width / tertiary.length),200,(i+1)*(canvas.width / tertiary.length),300);
+		}
+	}
+}
+
+function calculateSpread(index1, index2){
+	var lowi = index1 > index2 ? index2 : index1;
+	var highi = index1 > index2 ? index1 : index2;
+	var arr = new Array();
+	if(index1 == index2){
+		arr[0] = i1
+		return arr;
+	} else if( highi - lowi > lowi + hex.length - highi){ //we want to loop over edge of array
+		if(index1 == highi){
+			for(var i = 0; i < lowi + hex.length - highi; i++){
+				arr[i] = (highi + i) % hex.length;
+			}
+		} else {
+			for(var i = 0; i < lowi + hex.length - highi; i++){
+				arr[i] = (lowi - i) % hex.length;
+			}
+		}
+	} else { //simple cases
+		if(index1 < index2){
+			for(var i = 0; i < index2 - index1; i++){
+				arr[i] = index1 + i;
+			}
+		} else { //index2 < index1
+			for(var i = 0; i < index1 - index2; i++){
+				arr[i] = index1 - i;
+			}
+		}
+	}
+	return arr;
+}
+
+function handleFiles() {
 	var files = $('#file-input').prop('files'); 
 	if(!files){
 		$('#file-input-label').html("You must enter a file!");
@@ -64,26 +121,31 @@ function handleFiles(objectarray) {
 	//TODO: read in files line by line, assign each line to a dragon var
 	var reader = new FileReader();
 	reader.onload = function(){
-		setUpDragons(reader.result, objectarray);
-		storeDragons(objectarray);
+		setUpDragons(reader.result);
+		storeDragons();
 	};
 	
 	reader.readAsText(file);
 } 
 
-function setUpDragons(string, objectarray){
+function setUpDragons(string){
 	var darray = string.split('\n');
 	for(var i in darray ){
 		//alert(darray[i]);
-		objectarray[i] = jQuery.parseJSON(darray[i]);
-		//alert(objectarray[i].name + " added");
-		addToSidebar(objectarray[i]);
-		numberDragons++;
+		if(darray[i] != ''){
+			objectarray[i] = jQuery.parseJSON(darray[i]);
+			//alert(objectarray[i].name + " added");
+			addToSidebar(objectarray[i]);
+			numberDragons++;
+		}
 	}
+	setOnClickSidebar();
 }
 
 function addToSidebar(dragon){
-	$('#sidebar-list').append( '<div class="list-group-item" id="dragon-'+numberDragons+'"><h3>' + 
+	$('#sidebar-list').append( '<button type="button" class="btn btn-default btn-block list-group-item ' + 
+								(dragon.sex == 0 ? 'male' : 'female') +
+								'" id="dragon-'+numberDragons+'"><h3>' + 
 								dragon.name + 
 								' (<span id="dragon-sex-'+numberDragons+'">' + 
 								(dragon.sex == 0 ? 'M' : 'F') + 
@@ -93,7 +155,7 @@ function addToSidebar(dragon){
 								colors[dragon.s] + 
 								'</li><li>Tertiary:' +
 								colors[dragon.t] + 
-								'</li></ul></div>'
+								'</li></ul></button>'
 	);
 	$('#dragon-' + numberDragons).css('background-color', hex[dragon.p]);
 	$('#dragon-' + numberDragons).css('color', hex[dragon.s]);
@@ -125,7 +187,89 @@ function addToSidebar(dragon){
 		}
 	}
 }
-function storeDragons(objectarray){ 
+
+
+function setOnClickSidebar(){ //this has to be called after all elements added
+
+  $('.male').click(function(){
+	//alert("clicked");
+	if(!mSelected){
+		mSelected = true;
+		$(this).toggleClass('active');
+	} else if($(this).hasClass('active')){
+		mSelected = false;
+		$(this).removeClass('active');
+	} else { //another was selected before
+		$('.male.active').removeClass('active');
+		$(this).addClass('active');
+	}
+	if($(this).hasClass('active')){
+		var n = $(this).attr('id');
+		n = parseInt(n.substring(n.indexOf('-') + 1));
+		male = objectarray[n];
+		
+		//set the main dragon html
+		$('#male-dragon').html('<h2>' + 
+					male.name + 
+					' (M)</h2><ul><li>' + 
+					colors[male.p] + 
+					'</li><li>' +
+					colors[male.s] + 
+					'</li><li>' + 
+					colors[male.t] + 
+					'</li></ul><p><button class="btn btn-danger" >Delete</button><button class="btn btn-default" >Edit</button></p>'
+		);
+		
+		
+		if(mSelected && fSelected){
+			updateSpreads();
+		}
+	} else {
+		//TODO: set to some default??
+	}
+  });
+  
+  $('.female').click(function(){
+	//alert("clicked");
+	if(!fSelected){
+		fSelected = true;
+		$(this).toggleClass('active');
+	} else if($(this).hasClass('active')){
+		fSelected = false;
+		$(this).removeClass('active');
+	}else { //another was selected before
+		$('.female.active').removeClass('active');
+		$(this).addClass('active');
+	}
+	
+	if($(this).hasClass('active')){
+		var n = $(this).attr('id');
+		n = parseInt(n.substring(n.indexOf('-') + 1));
+		female = objectarray[n];
+	
+		//set the main dragon html
+		$('#female-dragon').html('<h2>' + 
+					female.name + 
+					' (F)</h2><ul><li>' + 
+					colors[female.p] + 
+					'</li><li>' +
+					colors[female.s] + 
+					'</li><li>' + 
+					colors[female.t] + 
+					'</li></ul><p><button class="btn btn-danger" >Delete</button><button class="btn btn-default" >Edit</button></p>'
+		);
+		
+		
+		if(mSelected && fSelected){
+			updateSpreads();
+		}
+	} else {
+		//TODO: set to some default??
+	}
+  });
+  
+}
+function storeDragons(){ 
 	var s = "";
 	for(var i in objectarray){
 		s = s + JSON.stringify(objectarray[i]) + '\n';
