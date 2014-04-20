@@ -29,7 +29,10 @@ $(document).ready(function () {
     $('.row-offcanvas').toggleClass('active')
   });
  
-
+  $('#save').click(function(){
+	var blob = new Blob([localStorage.getItem('frcolorplus')], {type: "text/plain;charset=utf-8"});
+	saveAs(blob, "frcolorplus.txt");
+  });
  
   $('#file-add-btn').click(fileAdd);
   $('#file-add-btn2').click(handleFiles);
@@ -82,7 +85,7 @@ function calculateSpread(index1, index2){
 	var highi = index1 > index2 ? index1 : index2;
 	var arr = new Array();
 	if(index1 == index2){
-		arr[0] = i1
+		arr[0] = index1;
 		return arr;
 	} else if( highi - lowi > lowi + hex.length - highi){ //we want to loop over edge of array
 		if(index1 == highi){
@@ -118,7 +121,6 @@ function handleFiles() {
 	$('#file-add').modal('hide');
     var file = files[0];
 	//var objectURL = window.URL.createObjectURL(file);
-	//TODO: read in files line by line, assign each line to a dragon var
 	var reader = new FileReader();
 	reader.onload = function(){
 		setUpDragons(reader.result);
@@ -161,22 +163,8 @@ function addToSidebar(dragon){
 	$('#dragon-' + numberDragons).css('color', hex[dragon.s]);
 	$('#dragon-sex-' + numberDragons).css('color', hex[dragon.t]);
 	
-	//calculate luminosity and determine if white or black text shadow from it
-	var c = hex[dragon.p].substring(1);      // strip #
-	var rgb = parseInt(c, 16);   // convert rrggbb to decimal
-	var r = (rgb >> 16) & 0xff;  // extract red
-	var g = (rgb >>  8) & 0xff;  // extract green
-	var b = (rgb >>  0) & 0xff;  // extract blue
-
-	var luma1 = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
-	
-	c = hex[dragon.s].substring(1);      // strip #
-	rgb = parseInt(c, 16);   // convert rrggbb to decimal
-	r = (rgb >> 16) & 0xff;  // extract red
-	g = (rgb >>  8) & 0xff;  // extract green
-	b = (rgb >>  0) & 0xff;  // extract blue
-	
-	var luma2 = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+	var luma1 = calculateLuminosity(hex[dragon.p]);
+	var luma2 = calculateLuminosity(hex[dragon.s]);
 
 	//only do shadow if text is too similar in lightness
 	if(luma1 - luma2 > 40 || luma2 - luma1 > 40){
@@ -188,6 +176,14 @@ function addToSidebar(dragon){
 	}
 }
 
+function calculateLuminosity(hexcode){
+	var c = hexcode.substring(1);      // strip #
+	var rgb = parseInt(c, 16);   // convert rrggbb to decimal
+	var r = (rgb >> 16) & 0xff;  // extract red
+	var g = (rgb >>  8) & 0xff;  // extract green
+	var b = (rgb >>  0) & 0xff;  // extract blue
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+}
 
 function setOnClickSidebar(){ //this has to be called after all elements added
 
@@ -203,6 +199,7 @@ function setOnClickSidebar(){ //this has to be called after all elements added
 		$('.male.active').removeClass('active');
 		$(this).addClass('active');
 	}
+	
 	if($(this).hasClass('active')){
 		var n = $(this).attr('id');
 		n = parseInt(n.substring(n.indexOf('-') + 1));
@@ -211,21 +208,43 @@ function setOnClickSidebar(){ //this has to be called after all elements added
 		//set the main dragon html
 		$('#male-dragon').html('<h2>' + 
 					male.name + 
-					' (M)</h2><ul><li>' + 
+					' (M)</h2><ul><li id="male-p">Primary: ' + 
 					colors[male.p] + 
-					'</li><li>' +
+					'</li><li id="male-s">Secondary: ' +
 					colors[male.s] + 
-					'</li><li>' + 
+					'</li><li id="male-t">Tertiary: ' + 
 					colors[male.t] + 
-					'</li></ul><p><button class="btn btn-danger" >Delete</button><button class="btn btn-default" >Edit</button></p>'
+					'</li></ul><p><button class="btn btn-danger" id="male-delete">Delete</button><button class="btn btn-default" id="male-edit">Edit</button></p>'
 		);
+		$('#male-p').css('color',hex[male.p]);
+		$('#male-s').css('color',hex[male.s]);
+		$('#male-t').css('color',hex[male.t]);
 		
+		if(calculateLuminosity(hex[male.p]) > 80)
+			$('#male-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+		
+		if(calculateLuminosity(hex[male.s]) > 80)
+			$('#male-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+		
+		if(calculateLuminosity(hex[male.t]) > 80)
+			$('#male-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
+	
 		
 		if(mSelected && fSelected){
 			updateSpreads();
 		}
 	} else {
-		//TODO: set to some default??
+		$('#male-dragon').html('<h2>' + 
+					"Dragon 2" + 
+					' (F)</h2><ul><li>' + 
+					'Primary' + 
+					'</li><li>' +
+					'Secondary' + 
+					'</li><li>' + 
+					'Tertiary' + 
+					'</li></ul>'
+		);
 	}
   });
   
@@ -250,21 +269,43 @@ function setOnClickSidebar(){ //this has to be called after all elements added
 		//set the main dragon html
 		$('#female-dragon').html('<h2>' + 
 					female.name + 
-					' (F)</h2><ul><li>' + 
+					' (F)</h2><ul><li id="female-p">Primary: ' + 
 					colors[female.p] + 
-					'</li><li>' +
+					'</li><li id="female-s">Secondary: ' +
 					colors[female.s] + 
-					'</li><li>' + 
+					'</li><li id="female-t">Tertiary: ' + 
 					colors[female.t] + 
-					'</li></ul><p><button class="btn btn-danger" >Delete</button><button class="btn btn-default" >Edit</button></p>'
+					'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
 		);
+		$('#female-p').css('color',hex[female.p]);
+		$('#female-s').css('color',hex[female.s]);
+		$('#female-t').css('color',hex[female.t]);
+		
+		if(calculateLuminosity(hex[female.p]) > 80)
+			$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+		
+		if(calculateLuminosity(hex[female.s]) > 80)
+			$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+		
+		if(calculateLuminosity(hex[female.t]) > 80)
+			$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			
 		
 		
 		if(mSelected && fSelected){
 			updateSpreads();
 		}
 	} else {
-		//TODO: set to some default??
+		$('#female-dragon').html('<h2>' + 
+					"Dragon 2" + 
+					' (F)</h2><ul><li>' + 
+					'Primary' + 
+					'</li><li>' +
+					'Secondary' + 
+					'</li><li>' + 
+					'Tertiary' + 
+					'</li></ul>'
+		);
 	}
   });
   

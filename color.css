@@ -59,3 +59,8 @@ footer {
     width: 50%; /* 6 columns */
   }
 }
+
+#sidebar{
+	height: 90vh;
+	overflow: scroll;
+}
