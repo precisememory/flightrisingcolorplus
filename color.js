@@ -23,6 +23,7 @@ var mSelected = false, fSelected = true; //only select one male/one female drago
 var male, female; //the dragons to breed
 var editIndex = -1; //index of dragon we are editing, or -1
 var deleteMale = false; // checked only when deleting. false is delete female, true is delete male. 
+var deleteAll = false; // checked when deleting something. true if delete all. 
 
 
 $(document).ready(function () {
@@ -65,6 +66,11 @@ $(document).ready(function () {
 	} else return false;
   });
   $('#really-delete-btn').click(deleteDragon);
+  
+  $('#delete-all-btn').click(function(){
+	deleteAll = true;
+    $('#delete-warning').modal('show');
+  });
   
   $('#more-info-btn').click(function(){
 	$('#storage').modal('hide');
@@ -275,7 +281,19 @@ function saveDragon(){
 	$('#tertiary-dropdown-button').html("Tertiary").css("background-color","#ffffff").css("color","#000000");
 }
 
+function deleteAllDragons(){
+	objectarray.length = 0;
+	storeDragons();
+	clearSidebarDragons();
+	setUpDragons(localStorage.getItem('frcolorplus'), 0);
+}
+
 function deleteDragon(){
+	if(deleteAll){
+		deleteAllDragons();
+		deleteAll = false;
+		return;
+	}
 	var dragon;
 	if(deleteMale){
 		dragon = male;

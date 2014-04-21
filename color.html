@@ -211,7 +211,7 @@
 						<h4 class="modal-title">Are you sure you want to delete?</h4>
 					</div>
 					<div class="modal-body">
-						<p>You'll have to manually reenter all data for this dragon to get it back. </p>
+						<p>You'll have to manually reenter all data for any dragons deleted to get it back. </p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" id="close-delete-btn" data-dismiss="modal">Never mind</button>
@@ -227,9 +227,13 @@
 				<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle list</button>
 			  </p>
 			  
-			  <button type="button" class="btn btn-default btn-lg" id="manual-add-btn2">Add a dragon</button>
-			  <button type="button" class="btn btn-primary btn-lg" id="save">Save your dragons!</button>
-			  
+			  <div class="row">
+				<button type="button" class="btn btn-default btn-lg" id="manual-add-btn2">Add a dragon</button>
+				<button type="button" class="btn btn-primary btn-lg" id="save">Save your dragons!</button>
+			  </div>
+			  <div class="row">
+				<button type="button" class="btn btn-danger" id="delete-all-btn" data-dismiss="modal">Delete all dragons</button>
+			  </div>
 			  <h2><small>Click the save button to prevent losing your dragons when your cache is cleared. Right click on color predictor image once generated and you can save it, too!</small></h2>
 			
 			  <div class="row">
