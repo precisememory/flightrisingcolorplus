@@ -374,6 +374,8 @@ function handleFiles() {
 	reader.onload = function(){
 		setUpDragons(reader.result, objectarray.length);
 		storeDragons();
+		clearSidebarDragons();
+		setUpDragons(localStorage.getItem('frcolorplus'), 0);
 	};
 	
 	reader.readAsText(file);
