@@ -231,6 +231,7 @@ function saveDragon(){
 		//then save dragon and add to sidebar
 		//alert(JSON.stringify(dragon));
 		dragon.location = numberDragons;
+		objectarray[numberDragons] = dragon;
 		var s = (localStorage.getItem('frcolorplus') ? localStorage.getItem('frcolorplus'): "") + JSON.stringify(dragon) + '\n'; //conditional fixes "null" at beginning
 		localStorage.setItem('frcolorplus',s);
 		addToSidebar(dragon);
@@ -238,6 +239,7 @@ function saveDragon(){
 		numberDragons++;
 	} else {
 		//we are editing
+		//alert(editIndex);
 		dragon.location = editIndex;
 		if(objectarray[editIndex].sex != dragon.sex){
 			removeCenter(objectarray[editIndex].sex);	
