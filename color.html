@@ -97,6 +97,29 @@
 			  </div>
 			</div>
 			
+			<!--Modal dialog shows if storage but no dragons-->
+			<div class="modal fade" id="firstrun" tabindex="-1" role="dialog" aria-labelledby="First run modal" aria-hidden="true">
+			  <div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title">No dragons found!</h4>
+					</div>
+					<div class="modal-body">
+						<p>You don't appear to have any dragons in your browser's local storage. You can:</p>
+						<ol>
+							<li>Add dragons manually</li>
+							<li>Add dragons from saved file</li>
+						</ol>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="manual-add-btn1">Add manually</button>
+						<button type="button" class="btn btn-primary" id="file-add-btn">Add from file</button>
+					</div>
+				</div>
+			  </div>
+			</div>
+			
 			<!--File choice box to read in dragon file-->
 			<div class="modal fade" id="file-add" tabindex="-1" role="dialog" aria-labelledby="File add modal" aria-hidden="true">
 			  <div class="modal-dialog modal-lg">
@@ -171,6 +194,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" id="file-manual-add" data-dismiss="modal">Add more dragons from file</button>
 						<button type="button" class="btn btn-default" id="save-manual-add1" data-dismiss="modal">Save this dragon and close</button>
 						<button type="button" class="btn btn-primary" id="save-manual-add2">Save and add more dragons</button>
 					</div>

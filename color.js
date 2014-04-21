@@ -17,7 +17,7 @@ var hex = [		'#fffdea',		'#ffffff',	'#dae0f3',	'#c8bece',		'#bbbabf',		'#7e7e7e'
 ];
 
 			
-var numberDragons = 0; //incremented and used with each dragon
+//var numberDragons = 0; //incremented and used with each dragon
 var objectarray = new Array(); //contains all a user's dragons
 var mSelected = false, fSelected = true; //only select one male/one female dragon at a time -- checks if this is true
 var male, female; //the dragons to breed
@@ -36,8 +36,15 @@ $(document).ready(function () {
 	saveAs(blob, "frcolorplus.txt");
   });
   
+  $('#file-manual-add').click(function(){
+	alert("If you have already added this file or dragons in it, the dragons stored in it will appear twice!");
+	fileAdd(); 
+  });
  
-  $('#file-add-btn').click(fileAdd);
+  $('#file-add-btn').click(function(){
+	$('#firstrun').modal('hide');
+	fileAdd();
+	});
   $('#file-add-btn2').click(handleFiles);
   $('#manual-add-btn1').click(manualAdd);  
   $('#manual-add-btn2').click(manualAdd);
@@ -69,7 +76,10 @@ $(document).ready(function () {
   } else if(!checkForDragons()){
 	$('#firstrun').modal('show');
   } else { //load dragons from storage
-	setUpDragons(localStorage.getItem('frcolorplus'));
+	//numberDragons = 0;
+	clearSidebarDragons();
+	//objectarray.length = 0;
+	setUpDragons(localStorage.getItem('frcolorplus'), 0);
   }
   
 }); //end document ready
@@ -230,13 +240,12 @@ function saveDragon(){
 	if(editIndex == -1){
 		//then save dragon and add to sidebar
 		//alert(JSON.stringify(dragon));
-		dragon.location = numberDragons;
-		objectarray[numberDragons] = dragon;
+		dragon.location = objectarray.length;
+		objectarray[dragon.location] = dragon;
 		var s = (localStorage.getItem('frcolorplus') ? localStorage.getItem('frcolorplus'): "") + JSON.stringify(dragon) + '\n'; //conditional fixes "null" at beginning
 		localStorage.setItem('frcolorplus',s);
 		addToSidebar(dragon);
 		addOnClick(dragon);
-		numberDragons++;
 	} else {
 		//we are editing
 		//alert(editIndex);
@@ -247,7 +256,8 @@ function saveDragon(){
 		objectarray[editIndex] = dragon;
 		editIndex = -1;
 		storeDragons();
-		setUpDragons(localStorage.getItem('frcolorplus'));
+		clearSidebarDragons();
+		setUpDragons(localStorage.getItem('frcolorplus'), 0);
 		//update center panel
 		if(dragon.sex == 0){
 			maleUpdateCenter(dragon, this);
@@ -274,9 +284,10 @@ function deleteDragon(){
 	}
 	removeCenter(dragon.sex);
 	objectarray.splice(dragon.location, 1);
-	
+	//numberDragons = objectarray.length;
 	storeDragons();
-	setUpDragons(localStorage.getItem('frcolorplus'));
+	clearSidebarDragons();
+	setUpDragons(localStorage.getItem('frcolorplus'), 0);
 }
 
 function colorIndex(name){
@@ -361,25 +372,30 @@ function handleFiles() {
 	//var objectURL = window.URL.createObjectURL(file);
 	var reader = new FileReader();
 	reader.onload = function(){
-		setUpDragons(reader.result);
+		setUpDragons(reader.result, objectarray.length);
 		storeDragons();
 	};
 	
 	reader.readAsText(file);
 } 
 
-function setUpDragons(string){
-	var darray = string.split('\n');
+function clearSidebarDragons(){
 	$('#sidebar-list').html('');
-	numberDragons = 0;
+}
+
+function setUpDragons(string, offset){
+	var darray = string.split('\n');
+	//$('#sidebar-list').html('');
+	//numberDragons = 0;
 	for(var i in darray ){
 		if(darray[i] && darray[i] != ''){
+			i = parseInt(i);
 			//alert(darray[i]);
-			objectarray[i] = jQuery.parseJSON(darray[i]);
-			objectarray[i].location = i;
+			objectarray[i+ offset] = jQuery.parseJSON(darray[i]);
+			objectarray[i + offset].location = i + offset;
 			//alert(objectarray[i].name + " added");
-			addToSidebar(objectarray[i]);
-			numberDragons++;
+			addToSidebar(objectarray[i + offset]);
+			//numberDragons++;
 		}
 	}
 	setOnClickSidebar();
@@ -388,9 +404,9 @@ function setUpDragons(string){
 function addToSidebar(dragon){
 	$('#sidebar-list').append( '<button type="button" class="btn btn-default btn-block list-group-item ' + 
 								(dragon.sex == 0 ? 'male' : 'female') +
-								'" id="dragon-'+numberDragons+'"><h3>' + 
+								'" id="dragon-'+dragon.location+'"><h3>' + 
 								dragon.name + 
-								' (<span id="dragon-sex-'+numberDragons+'">' + 
+								' (<span id="dragon-sex-'+dragon.location+'">' + 
 								(dragon.sex == 0 ? 'M' : 'F') + 
 								'</span>)</h3> <ul> <li>Primary: ' + 
 								colors[dragon.p] + 
@@ -400,9 +416,9 @@ function addToSidebar(dragon){
 								colors[dragon.t] + 
 								'</li></ul></button>'
 	);
-	$('#dragon-' + numberDragons).css('background-color', hex[dragon.p]);
-	$('#dragon-' + numberDragons).css('color', hex[dragon.s]);
-	$('#dragon-sex-' + numberDragons).css('color', hex[dragon.t]);
+	$('#dragon-' + dragon.location).css('background-color', hex[dragon.p]);
+	$('#dragon-' + dragon.location).css('color', hex[dragon.s]);
+	$('#dragon-sex-' + dragon.location).css('color', hex[dragon.t]);
 	
 	var luma1 = calculateLuminosity(hex[dragon.p]);
 	var luma2 = calculateLuminosity(hex[dragon.s]);
@@ -410,9 +426,9 @@ function addToSidebar(dragon){
 	//only do shadow if text is too similar in lightness
 	if(luma1 - luma2 < 60 || luma2 - luma1 < 60){
 		if(luma1 > 60){
-			$('#dragon-' + numberDragons).css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			$('#dragon-' + dragon.location).css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
 		} else {
-			$('#dragon-' + numberDragons).css('text-shadow', '-1px -1px #ffffff, -1px 1px #ffffff, 1px -1px #ffffff, 1px 1px #ffffff'); // black border hopefully increases readability
+			$('#dragon-' + dragon.location).css('text-shadow', '-1px -1px #ffffff, -1px 1px #ffffff, 1px -1px #ffffff, 1px 1px #ffffff'); // black border hopefully increases readability
 		}
 	}
 }
@@ -428,11 +444,11 @@ function calculateLuminosity(hexcode){
 function addOnClick(dragon){
 
 	if(dragon.sex == 0){
-	 $('#dragon-' + numberDragons).click(function(){
+	 $('#dragon-' + dragon.location).click(function(){
 		maleUpdateCenter(dragon, this);
 	  });
 	  } else { 
-	  $('#dragon-' + numberDragons).click(function(){
+	  $('#dragon-' + dragon.location).click(function(){
 		femaleUpdateCenter(dragon, this);
 	  });
 	}
@@ -465,7 +481,6 @@ function storeDragons(){
 }
 
 function fileAdd(){
-	$('#firstrun').modal('hide');
 	$('#file-add').modal('show');
 }
 
