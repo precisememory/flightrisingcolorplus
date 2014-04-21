@@ -328,7 +328,7 @@ function calculateSpread(index1, index2){
 				if(arr[i] < 0) arr[i] += hex.length;
 			}
 		} else {
-			for(var i = 0; i < lowi + hex.length - highi + 1+ 1; i++){
+			for(var i = 0; i < lowi + hex.length - highi + 1; i++){
 				arr[i] = (lowi - i) % hex.length;
 				if(arr[i] < 0) arr[i] += hex.length;
 			}
