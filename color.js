@@ -408,7 +408,7 @@ function addToSidebar(dragon){
 	var luma2 = calculateLuminosity(hex[dragon.s]);
 
 	//only do shadow if text is too similar in lightness
-	if(luma1 - luma2 > 60 || luma2 - luma1 > 60){
+	if(luma1 - luma2 < 60 || luma2 - luma1 < 60){
 		if(luma1 > 60){
 			$('#dragon-' + numberDragons).css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
 		} else {
