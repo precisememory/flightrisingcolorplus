@@ -41,8 +41,22 @@ $(document).ready(function () {
   $('#file-add-btn2').click(handleFiles);
   $('#manual-add-btn1').click(manualAdd);  
   $('#manual-add-btn2').click(manualAdd);
-  $('#save-manual-add1').click(saveDragon);
-  $('#save-manual-add2').click(saveDragon);
+  $('#save-manual-add1').click(function(){
+	if(	$('#sex-dropdown-button').html() != "Sex" &&
+		$('#primary-dropdown-button').html() != "Primary" &&
+		$('#secondary-dropdown-button').html() != "Secondary" &&
+		$('#tertiary-dropdown-button').html() != "Tertiary") {
+		saveDragon()
+	} else return false;
+  });
+  $('#save-manual-add2').click(function(){
+	if(	$('#sex-dropdown-button').html() != "Sex" &&
+		$('#primary-dropdown-button').html() != "Primary" &&
+		$('#secondary-dropdown-button').html() != "Secondary" &&
+		$('#tertiary-dropdown-button').html() != "Tertiary") {
+		saveDragon()
+	} else return false;
+  });
   $('#really-delete-btn').click(deleteDragon);
   
   $('#more-info-btn').click(function(){
@@ -212,14 +226,16 @@ function saveDragon(){
 	dragon.s = colorIndex($('#secondary-dropdown-button').html());
 	dragon.t = colorIndex($('#tertiary-dropdown-button').html());
 	
+	
 	if(editIndex == -1){
 		//then save dragon and add to sidebar
 		//alert(JSON.stringify(dragon));
-		var s = localStorage.getItem('frcolorplus') + JSON.stringify(dragon) + '\n';
+		dragon.location = numberDragons;
+		var s = (localStorage.getItem('frcolorplus') ? localStorage.getItem('frcolorplus'): "") + JSON.stringify(dragon) + '\n'; //conditional fixes "null" at beginning
 		localStorage.setItem('frcolorplus',s);
 		addToSidebar(dragon);
 		addOnClick(dragon);
-		numberDragons = numberDragons + 1;
+		numberDragons++;
 	} else {
 		//we are editing
 		dragon.location = editIndex;
@@ -238,6 +254,13 @@ function saveDragon(){
 			
 		 }
 	}
+	
+	//finally, reset values of dialog
+	$('#new-name').val("");
+	$('#sex-dropdown-button').html("Sex");
+	$('#primary-dropdown-button').html("Primary").css("background-color","#ffffff").css("color","#000000");
+	$('#secondary-dropdown-button').html("Secondary").css("background-color","#ffffff").css("color","#000000");
+	$('#tertiary-dropdown-button').html("Tertiary").css("background-color","#ffffff").css("color","#000000");
 }
 
 function deleteDragon(){
