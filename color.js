@@ -455,13 +455,14 @@ function addToSidebar(dragon){
 								dragon.name + 
 								' (<span id="dragon-sex-'+dragon.location+'">' + 
 								(dragon.sex == 0 ? 'M' : 'F') + 
-								'</span>)</h3> <ul> <li>Primary: ' + 
+								'</span>)</h3>' + /*'<ul> <li>Primary: ' + 
 								colors[dragon.p] + 
 								'</li><li>Secondary: ' + 
 								colors[dragon.s] + 
 								'</li><li>Tertiary:' +
 								colors[dragon.t] + 
-								'</li></ul></button>'
+								'</li></ul>'*/
+								'</button>'
 	);
 	$('#dragon-' + dragon.location).css('background-color', hex[dragon.p]);
 	$('#dragon-' + dragon.location).css('color', hex[dragon.s]);
