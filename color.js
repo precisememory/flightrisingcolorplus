@@ -289,6 +289,7 @@ function saveDragon(){
 function deleteAllDragons(){
 	objectarray.length = 0;
 	storeDragons();
+	maleLock = femaleLock = false;
 	clearSidebarDragons();
 	setUpDragons(localStorage.getItem('frcolorplus'), 0);
 }
@@ -301,8 +302,10 @@ function deleteDragon(){
 	}
 	var dragon;
 	if(deleteMale){
+		maleLock = false;
 		dragon = male;
 	} else {
+		femaleLock = false;
 		dragon = female;
 	}
 	removeCenter(dragon.sex);
