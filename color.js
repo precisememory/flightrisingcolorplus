@@ -411,11 +411,16 @@ function setUpDragons(string, offset){
 		if(darray[i] && darray[i] != ''){
 			i = parseInt(i);
 			//alert(darray[i]);
-			objectarray[i+ offset] = jQuery.parseJSON(darray[i]);
+			try{
+			objectarray[i + offset] = jQuery.parseJSON(darray[i]);
 			objectarray[i + offset].location = i + offset;
 			//alert(objectarray[i].name + " added");
 			addToSidebar(objectarray[i + offset]);
 			//numberDragons++;
+			} catch(e){
+			//ignore this line and skip to next 
+			//which means, do nothing here, let the for loop take its course
+			}
 		}
 	}
 	setOnClickSidebar();
