@@ -129,15 +129,11 @@ function femaleUpdateCenter(dragon, that){
 			$('#female-s').css('color',hex[female.s]);
 			$('#female-t').css('color',hex[female.t]);
 			
-			if(calculateLuminosity(hex[female.p]) > 80)
-				$('#female-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			$('#female-p').addClass('black-border-text');
 			
-			if(calculateLuminosity(hex[female.s]) > 80)
-				$('#female-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-			if(calculateLuminosity(hex[female.t]) > 80)
-				$('#female-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
+			$('#female-s').addClass('black-border-text');
 				
+			$('#female-t').addClass('black-border-text');
 			
 			
 			if(mSelected && fSelected){
@@ -215,15 +211,9 @@ function maleUpdateCenter(dragon, that){
 				$('#delete-warning').modal('show');
 			});
 			
-			if(calculateLuminosity(hex[male.p]) > 80)
-				$('#male-p').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-			if(calculateLuminosity(hex[male.s]) > 80)
-				$('#male-s').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-			
-			if(calculateLuminosity(hex[male.t]) > 80)
-				$('#male-t').css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-				
+			$('#male-p').addClass('black-border-text');
+			$('#male-s').addClass('black-border-text');
+			$('#male-t').addClass('black-border-text');
 		
 			
 			if(mSelected && fSelected){
@@ -447,16 +437,14 @@ function addToSidebar(dragon){
 	$('#dragon-sex-' + dragon.location).css('color', hex[dragon.t]);
 	
 	var luma1 = calculateLuminosity(hex[dragon.p]);
-	var luma2 = calculateLuminosity(hex[dragon.s]);
+	
 
-	//only do shadow if text is too similar in lightness
-	if(luma1 - luma2 < 60 || luma2 - luma1 < 60){
-		if(luma1 > 60){
-			$('#dragon-' + dragon.location).css('text-shadow', '-1px -1px #000000, -1px 1px #000000, 1px -1px #000000, 1px 1px #000000'); // black border hopefully increases readability
-		} else {
-			$('#dragon-' + dragon.location).css('text-shadow', '-1px -1px #ffffff, -1px 1px #ffffff, 1px -1px #ffffff, 1px 1px #ffffff'); // black border hopefully increases readability
-		}
+	if(luma1 > 60){
+		$('#dragon-' + dragon.location).addClass('black-border-text');
+	} else {
+		$('#dragon-' + dragon.location).addClass('white-border-text');
 	}
+	
 }
 
 function calculateLuminosity(hexcode){
