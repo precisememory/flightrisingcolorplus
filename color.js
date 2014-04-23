@@ -314,20 +314,51 @@ function updateSpreads(){
 		
 		var canvas = document.getElementById("canvas-color-spread");
 		canvas.width = $("#page-center").width();
-		canvas.height = 300;
+		canvas.height = 150;
 		var ctx = canvas.getContext("2d");
+		
+		//clear canvas
+		ctx.fillStyle = "#ffffff";
+		ctx.fillRect(0,0,canvas.width, canvas.length);
+		//NEW:add a border
+		ctx.strokeStyle = '#000000';
+		ctx.lineWidth = 1;
+		
+		var width = 15;
+		//The new way, fixed-size bars that are centered
+		var center = canvas.width / 2;
+		var start = canvas.width / 2 - (prim.length/2)*width;
+		for(var i = 0; i < prim.length; i++){
+			ctx.fillStyle = hex[prim[i]];
+			ctx.fillRect(start + i*width,0,width, 50);
+			ctx.strokeRect(start + i*width,0,width, 50);
+		}
+		start = canvas.width / 2 - (second.length/2)*width;
+		for(var i = 0; i < second.length ; i++){
+			ctx.fillStyle = hex[second[i]];
+			ctx.fillRect(start + i*width,50,width, 50);
+			ctx.strokeRect(start + i*width,50,width, 50);
+		}
+		start = canvas.width / 2 - (tert.length/2)*width;
+		for(var i = 0; i < tert.length ; i++){
+			ctx.fillStyle = hex[tert[i]];
+			ctx.fillRect(start + i*width,100,width, 50);
+			ctx.strokeRect(start + i*width,100,width, 50);
+		}
+		
+		/*The old way, where the bars stretch
 		for(var i = 0; i < prim.length ; i++){
 			ctx.fillStyle = hex[prim[i]];
-			ctx.fillRect(i*(canvas.width / prim.length),0,(i+1)*(canvas.width / prim.length), 100);
+			ctx.fillRect(i*(canvas.width / prim.length),0,(i+1)*(canvas.width / prim.length), 50);
 		}
 		for(var i = 0; i < second.length ; i++){
 			ctx.fillStyle = hex[second[i]];
-			ctx.fillRect(i*(canvas.width / second.length),100,(i+1)*(canvas.width / second.length),200);
+			ctx.fillRect(i*(canvas.width / second.length),50,(i+1)*(canvas.width / second.length),100);
 		}
 		for(var i = 0; i < tert.length ; i++){
 			ctx.fillStyle = hex[tert[i]];
-			ctx.fillRect(i*(canvas.width / tert.length),200,(i+1)*(canvas.width / tert.length),300);
-		}
+			ctx.fillRect(i*(canvas.width / tert.length),100,(i+1)*(canvas.width / tert.length),150);
+		}*/
 	}
 }
 
