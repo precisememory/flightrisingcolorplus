@@ -109,7 +109,7 @@ function femaleUpdateCenter(dragon, that){
 			//set the main dragon html
 			$('#female-dragon').html('<h2>' + 
 						female.name + 
-						' (F)</h2><ul><li id="female-p">Primary: ' + 
+						' (F)</h2><ul class="list-unstyled"><li id="female-p">Primary: ' + 
 						colors[female.p] + 
 						'</li><li id="female-s">Secondary: ' +
 						colors[female.s] + 
@@ -149,7 +149,7 @@ function removeCenter(sex){
 		male = null;
 		$('#male-dragon').html('<h2>' + 
 						"Dragon 1" + 
-						' (M)</h2><ul><li>' + 
+						' (M)</h2><ul class="list-unstyled"><li>' + 
 						'Primary' + 
 						'</li><li>' +
 						'Secondary' + 
@@ -161,7 +161,7 @@ function removeCenter(sex){
 		female = null;
 		$('#female-dragon').html('<h2>' + 
 						"Dragon 2" + 
-						' (F)</h2><ul><li>' + 
+						' (F)</h2><ul class="list-unstyled"><li>' + 
 						'Primary' + 
 						'</li><li>' +
 						'Secondary' + 
@@ -190,7 +190,7 @@ function maleUpdateCenter(dragon, that){
 			//set the main dragon html
 			$('#male-dragon').html('<h2>' + 
 						male.name + 
-						' (M)</h2><ul><li id="male-p">Primary: ' + 
+						' (M)</h2><ul class="list-unstyled"><li id="male-p">Primary: ' + 
 						colors[male.p] + 
 						'</li><li id="male-s">Secondary: ' +
 						colors[male.s] + 

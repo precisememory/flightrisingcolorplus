@@ -237,9 +237,9 @@
 			  <h2><small>Click the save button to prevent losing your dragons when your cache is cleared. Right click on color predictor image once generated and you can save it, too!</small></h2>
 			
 			  <div class="row">
-				<div class="col-6 col-sm-6 col-lg-4" id="male-dragon">
+				<div class="col-6 col-sm-6 col-lg-6 text-center" id="male-dragon">
 				  <h2>Dragon 1 (M)</h2>
-				  <ul>
+				  <ul class="list-unstyled">
 					<li>Primary</li>
 					<li>Secondary</li>
 					<li>Tertiary</li>
@@ -247,9 +247,9 @@
 				  
 				</div><!--/span-->
 			  
-				<div class="col-6 col-sm-6 col-lg-4" id="female-dragon">
+				<div class="col-6 col-sm-6 col-lg-6 text-center" id="female-dragon">
 				  <h2>Dragon 2 (F)</h2>
-				  <ul>
+				  <ul class="list-unstyled">
 					<li>Primary</li>
 					<li>Secondary</li>
 					<li>Tertiary</li>
@@ -259,7 +259,9 @@
 			  </div><!--/row-->
 			  
 			  <div class="row" id="color-spread">
-				<canvas id="canvas-color-spread" width=0 height=0>Canvas is not supported, this tool won't work for you.</canvas>
+				<div class="col-6 col-xs-9 col-sm-6">
+					<canvas id="canvas-color-spread" width=0 height=0>Canvas is not supported, this tool won't work for you.</canvas>
+				</div>
 			  </div> <!--/row-->
 			  
 			  
@@ -267,7 +269,7 @@
 		</div> <!--/info-->
 		
 		<!--sidebar-->
-		<div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
+		<div class="col-xs-6 col-sm-3 col-3 sidebar-offcanvas" id="sidebar">
 			<div class="list-group" id="sidebar-list">
 				
 			</div><!--/group-->
@@ -278,7 +280,7 @@
 		<p>Made by @<a href="http://twitter.com/precisememory" title="Twitter">precisememory</a> (#<a href="http://flightrising.com/main.php?p=lair&tab=userpage&id=45101" title="Flight Rising">45101</a>)</p>
 	</footer>
 	
-	</div>
+	</div> <!--/container-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
