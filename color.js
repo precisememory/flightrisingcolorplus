@@ -24,6 +24,7 @@ var male, female; //the dragons to breed
 var editIndex = -1; //index of dragon we are editing, or -1
 var deleteMale = false; // checked only when deleting. false is delete female, true is delete male. 
 var deleteAll = false; // checked when deleting something. true if delete all. 
+var maleLock = false, femaleLock = false; //check if center dragon is locked in place
 
 
 $(document).ready(function () {
@@ -91,6 +92,8 @@ $(document).ready(function () {
 }); //end document ready
 
 function femaleUpdateCenter(dragon, that){
+		
+	if(!femaleLock){
 
 		if(!fSelected){
 			fSelected = true;
@@ -115,7 +118,7 @@ function femaleUpdateCenter(dragon, that){
 						colors[female.s] + 
 						'</li><li id="female-t">Tertiary: ' + 
 						colors[female.t] + 
-						'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button></p>'
+						'</li></ul><p><button class="btn btn-danger" id="female-delete">Delete</button><button class="btn btn-default" id="female-edit">Edit</button><button class="btn btn-default" id="female-lock">Lock</button></p>'
 			);
 			$('#female-edit').click(function(){
 				editIndex = female.location;
@@ -124,6 +127,10 @@ function femaleUpdateCenter(dragon, that){
 			$('#female-delete').click(function(){
 				deleteMale = false;
 				$('#delete-warning').modal('show');
+			});
+			$('#female-lock').click(function(){
+				$(this).toggleClass("active");
+				femaleLock = !femaleLock;
 			});
 			$('#female-p').css('color',hex[female.p]);
 			$('#female-s').css('color',hex[female.s]);
@@ -142,6 +149,7 @@ function femaleUpdateCenter(dragon, that){
 		} else {
 			removeCenter(1);
 		}
+	}
 }
 
 function removeCenter(sex){
@@ -173,7 +181,8 @@ function removeCenter(sex){
 }
 
 function maleUpdateCenter(dragon, that){
-	if(!mSelected){
+	if(!maleLock){
+		if(!mSelected){
 			mSelected = true;
 			$(that).toggleClass('active');
 		} else if($(that).hasClass('active')){
@@ -196,7 +205,7 @@ function maleUpdateCenter(dragon, that){
 						colors[male.s] + 
 						'</li><li id="male-t">Tertiary: ' + 
 						colors[male.t] + 
-						'</li></ul><p><button class="btn btn-danger" id="male-delete">Delete</button><button class="btn btn-default" id="male-edit">Edit</button></p>'
+						'</li></ul><p><button class="btn btn-danger" id="male-delete">Delete</button><button class="btn btn-default" id="male-edit">Edit</button><button class="btn btn-default" id="male-lock">Lock</button></p>'
 			);
 			$('#male-p').css('color',hex[male.p]);
 			$('#male-s').css('color',hex[male.s]);
@@ -210,6 +219,10 @@ function maleUpdateCenter(dragon, that){
 				deleteMale = true;
 				$('#delete-warning').modal('show');
 			});
+			$('#male-lock').click(function(){
+				$(this).toggleClass("active");
+				maleLock = !maleLock;
+			});
 			
 			$('#male-p').addClass('black-border-text');
 			$('#male-s').addClass('black-border-text');
@@ -222,6 +235,8 @@ function maleUpdateCenter(dragon, that){
 		} else {
 			removeCenter(0);
 		}
+		
+	}
  }
 
 function saveDragon(){
