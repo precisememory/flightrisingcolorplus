@@ -418,6 +418,7 @@ function setUpDragons(string, offset){
 			addToSidebar(objectarray[i + offset]);
 			//numberDragons++;
 			} catch(e){
+			alert("Dragon file has a problem in this line: " + darray[i]);
 			//ignore this line and skip to next 
 			//which means, do nothing here, let the for loop take its course
 			}
