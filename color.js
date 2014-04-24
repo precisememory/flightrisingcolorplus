@@ -37,6 +37,14 @@ $(document).ready(function () {
 	var blob = new Blob([localStorage.getItem('frcolorplus')], {type: "text/plain;charset=utf-8"});
 	saveAs(blob, "frcolorplus.txt");
   });
+  $('#canvas-color-spread').click(function(){
+	var canvas = document.getElementById("canvas-color-spread");
+// draw to canvas...
+	canvas.toBlob(function(blob) {
+		saveAs(blob, "dragoncolorimage.png");
+	});
+  });
+  
   
   $('#file-manual-add').click(function(){
 	alert("If you have already added this file or dragons in it, the dragons stored in it will appear twice!");
