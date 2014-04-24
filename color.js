@@ -60,7 +60,10 @@ $('.selectpicker').selectpicker();
 	});
   $('#file-add-btn2').click(handleFiles);
   $('#manual-add-btn1').click(manualAdd);  
-  $('#manual-add-btn2').click(manualAdd);
+  $('#manual-add-btn2').click(function(){
+  editIndex = -1;
+  manualAdd();
+  });
   $('#save-manual-add1').click(function(){
 	if(	$('#sex-dropdown').val() != "Sex" &&
 		$('#primary-dropdown').val() != "Primary" &&
@@ -560,10 +563,11 @@ function fileAdd(){
 }
 
 function editDragon(dragon){
+	populateAdd();
 	$('#new-name').val(dragon.name);
 	dragon.sex == 0 ? $('#sex-dropdown').selectpicker("val","M") : $('#sex-dropdown').selectpicker("val","F");
 	$('#primary-dropdown').selectpicker("val",colors[dragon.p]);
-	$('#primary-dropdown').css('background-color', hex[dragon.p]);
+	$('#primary-dropdown').css('background-color', hex[dragon.p] + " !important");
 	if(calculateLuminosity(hex[dragon.p]) < 60)
 		$('#primary-dropdown').css('color', '#ffffff');
 	
@@ -577,14 +581,14 @@ function editDragon(dragon){
 	if(calculateLuminosity(hex[dragon.t]) < 60)
 		$('#tertiary-dropdown').css('color', '#ffffff');
 	
-	
+	$('.selectpicker').selectpicker("refresh");
 	//and modal stuff
 	manualAdd();
 	
 }
 
-function manualAdd(){
-	//alert("going to populate");
+function populateAdd(){
+//alert("going to populate");
 	//populate dropdowns for manual addition
 	if(!($('#primary-0').length)){
 		for(var i in colors){
@@ -606,6 +610,18 @@ function manualAdd(){
 	}
 	//now populated
 	 $('.selectpicker').selectpicker('refresh');
+	 
+	 if(editIndex == -1){//reset dialog values to initial ones
+		$('#new-name').val("");
+		$('#sex-dropdown').selectpicker("val","Sex");
+		$('#primary-dropdown').selectpicker("val","Primary").css("background-color","#ffffff").css("color","#000000");
+		$('#secondary-dropdown').selectpicker("val","Secondary").css("background-color","#ffffff").css("color","#000000");
+		$('#tertiary-dropdown').selectpicker("val","Tertiary").css("background-color","#ffffff").css("color","#000000");
+	}
+}
+
+function manualAdd(){
+	populateAdd();
 	/*$("option").click(function(){
 		var selText = $(this).text();
 		var bgcolor = $(this).css("background-color");
@@ -613,6 +629,7 @@ function manualAdd(){
 		//alert(selText);
 		$(this).parents('.btn-group').find('.dropdown-toggle').html(selText).css("color", color).css("background-color", bgcolor);
     });*/
+	
 	
 	$('#firstrun').modal('hide');
 	$('#manual-add').modal('show');
