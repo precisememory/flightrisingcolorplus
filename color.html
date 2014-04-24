@@ -8,6 +8,7 @@
 
     <!-- Bootstrap -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
 	
 	<!--mine-->
 	<link href="color.css" rel="stylesheet">
@@ -161,34 +162,33 @@
 						<br>
 						
 						<div class="dropdown btn-group">
-						  <button class="btn btn-default dropdown-toggle" id="sex-dropdown-button" data-toggle="dropdown">Sex</button>
-						  <ul class="dropdown-menu scrollable-menu" id="sex-dropdown-ul" role="menu" aria-labelledby="sex-dropdown">
-							<li>M</li>
-							<li>F</li>
-						  </ul>
+						  <select class="selectpicker sex-option span1" id="sex-dropdown" role="menu" aria-labelledby="sex-dropdown">
+							<option class="sex-option option" role="menuitem">Sex</option>
+							<option class="sex-option option" role="menuitem">M</option>
+							<option class="sex-option option" role="menuitem">F</option>
+						  </select>
 						</div>
 						
 						<br>
 					
 						<div class="dropdown btn-group">
-						  <button class="btn btn-default dropdown-toggle" id="primary-dropdown-button" data-toggle="dropdown">Primary</button>
-						  <ul class="dropdown-menu scrollable-menu" id="primary-dropdown-ul" role="menu" aria-labelledby="primary-dropdown">
-						
-						  </ul>
+						  <select class="selectpicker color-option" id="primary-dropdown" role="menu" data-live-search="true" aria-labelledby="primary-dropdown">
+							<option class="color-option option" role="menuitem">Primary</option>
+						  </select>
 						</div>
 						
 						<div class="dropdown btn-group">
-						  <button class="btn btn-default dropdown-toggle" id="secondary-dropdown-button" data-toggle="dropdown">Secondary</button>
-						  <ul class="dropdown-menu scrollable-menu" id="secondary-dropdown-ul" role="menu" aria-labelledby="secondary-dropdown">
-						
-						  </ul>
+						   <select class="selectpicker color-option" id="secondary-dropdown" role="menu" data-live-search="true" aria-labelledby="secondary-dropdown">
+								<option class="color-option option" role="menuitem">Secondary</option>
+
+						  </select>
 						</div>
 						
 						<div class="dropdown btn-group">
-						  <button class="btn btn-default dropdown-toggle" id="tertiary-dropdown-button" data-toggle="dropdown">Tertiary</button>
-						  <ul class="dropdown-menu scrollable-menu" id="tertiary-dropdown-ul" role="menu" aria-labelledby="tertiary-dropdown">
+						  <select class="selectpicker color-option" id="tertiary-dropdown" role="menu" data-live-search="true" aria-labelledby="tertiary-dropdown">
+							<option class="color-option option" role="menuitem">Tertiary</option>
 						
-						  </ul>
+						  </select>
 						</div>
 
 					</div>
@@ -261,7 +261,7 @@
 			  
 			  <div class="row" id="color-spread">
 				<div class="col-6 col-xs-9 col-sm-6">
-					<canvas id="canvas-color-spread" width=0 height=0 download="dragoncolors.html">Canvas is not supported, this tool won't work for you.</canvas>
+					<canvas id="canvas-color-spread" width=0 height=0>Canvas is not supported, this tool won't work for you.</canvas>
 				</div>
 			  </div> <!--/row-->
 			  
@@ -287,6 +287,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="bootstrap-select/bootstrap-select.min.js"></script>
 	<!--My files-->
 	<script src="color.js"></script>
 	<!--Files from elsewhere-->

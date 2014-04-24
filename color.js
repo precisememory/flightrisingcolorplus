@@ -28,6 +28,9 @@ var maleLock = false, femaleLock = false; //check if center dragon is locked in 
 
 
 $(document).ready(function () {
+//set up selectpicker
+$('.selectpicker').selectpicker();
+
 //set up toggling sidebar
   $('[data-toggle=offcanvas]').click(function () {
     $('.row-offcanvas').toggleClass('active')
@@ -59,18 +62,18 @@ $(document).ready(function () {
   $('#manual-add-btn1').click(manualAdd);  
   $('#manual-add-btn2').click(manualAdd);
   $('#save-manual-add1').click(function(){
-	if(	$('#sex-dropdown-button').html() != "Sex" &&
-		$('#primary-dropdown-button').html() != "Primary" &&
-		$('#secondary-dropdown-button').html() != "Secondary" &&
-		$('#tertiary-dropdown-button').html() != "Tertiary") {
+	if(	$('#sex-dropdown').val() != "Sex" &&
+		$('#primary-dropdown').val() != "Primary" &&
+		$('#secondary-dropdown').val() != "Secondary" &&
+		$('#tertiary-dropdown').val() != "Tertiary") {
 		saveDragon()
 	} else return false;
   });
   $('#save-manual-add2').click(function(){
-	if(	$('#sex-dropdown-button').html() != "Sex" &&
-		$('#primary-dropdown-button').html() != "Primary" &&
-		$('#secondary-dropdown-button').html() != "Secondary" &&
-		$('#tertiary-dropdown-button').html() != "Tertiary") {
+	if(	$('#sex-dropdown').val() != "Sex" &&
+		$('#primary-dropdown').val() != "Primary" &&
+		$('#secondary-dropdown').val() != "Secondary" &&
+		$('#tertiary-dropdown').val() != "Tertiary") {
 		saveDragon()
 	} else return false;
   });
@@ -250,10 +253,10 @@ function maleUpdateCenter(dragon, that){
 function saveDragon(){
 	var dragon = new Object();
 	dragon.name = $('#new-name').val();
-	dragon.sex = ($('#sex-dropdown-button').html() == "M") ? 0 : 1;
-	dragon.p = colorIndex($('#primary-dropdown-button').html());
-	dragon.s = colorIndex($('#secondary-dropdown-button').html());
-	dragon.t = colorIndex($('#tertiary-dropdown-button').html());
+	dragon.sex = ($('#sex-dropdown').val() == "M") ? 0 : 1;
+	dragon.p = colorIndex($('#primary-dropdown').val());
+	dragon.s = colorIndex($('#secondary-dropdown').val());
+	dragon.t = colorIndex($('#tertiary-dropdown').val());
 	
 	
 	if(editIndex == -1){
@@ -288,10 +291,10 @@ function saveDragon(){
 	
 	//finally, reset values of dialog
 	$('#new-name').val("");
-	$('#sex-dropdown-button').html("Sex");
-	$('#primary-dropdown-button').html("Primary").css("background-color","#ffffff").css("color","#000000");
-	$('#secondary-dropdown-button').html("Secondary").css("background-color","#ffffff").css("color","#000000");
-	$('#tertiary-dropdown-button').html("Tertiary").css("background-color","#ffffff").css("color","#000000");
+	$('#sex-dropdown').selectpicker("val","Sex");
+	$('#primary-dropdown').selectpicker("val","Primary").css("background-color","#ffffff").css("color","#000000");
+	$('#secondary-dropdown').selectpicker("val","Secondary").css("background-color","#ffffff").css("color","#000000");
+	$('#tertiary-dropdown').selectpicker("val","Tertiary").css("background-color","#ffffff").css("color","#000000");
 }
 
 function deleteAllDragons(){
@@ -558,66 +561,40 @@ function fileAdd(){
 
 function editDragon(dragon){
 	$('#new-name').val(dragon.name);
-	dragon.sex == 0 ? $('#sex-dropdown-button').html('M') : $('#sex-dropdown-button').html('F');
-	$('#primary-dropdown-button').html(colors[dragon.p]);
-	$('#primary-dropdown-button').css('background-color', hex[dragon.p]);
+	dragon.sex == 0 ? $('#sex-dropdown').selectpicker("val","M") : $('#sex-dropdown').selectpicker("val","F");
+	$('#primary-dropdown').selectpicker("val",colors[dragon.p]);
+	$('#primary-dropdown').css('background-color', hex[dragon.p]);
 	if(calculateLuminosity(hex[dragon.p]) < 60)
-		$('#primary-dropdown-button').css('color', '#ffffff');
+		$('#primary-dropdown').css('color', '#ffffff');
 	
-	$('#secondary-dropdown-button').html(colors[dragon.s]);
-	$('#secondary-dropdown-button').css('background-color', hex[dragon.s]);
+	$('#secondary-dropdown').selectpicker("val",colors[dragon.s]);
+	$('#secondary-dropdown').css('background-color', hex[dragon.s]);
 	if(calculateLuminosity(hex[dragon.s]) < 60)
-		$('#secondary-dropdown-button').css('color', '#ffffff');
+		$('#secondary-dropdown').css('color', '#ffffff');
 		
-	$('#tertiary-dropdown-button').html(colors[dragon.t]);
-	$('#tertiary-dropdown-button').css('background-color', hex[dragon.t]);
+	$('#tertiary-dropdown').selectpicker("val",colors[dragon.t]);
+	$('#tertiary-dropdown').css('background-color', hex[dragon.t]);
 	if(calculateLuminosity(hex[dragon.t]) < 60)
-		$('#tertiary-dropdown-button').css('color', '#ffffff');
+		$('#tertiary-dropdown').css('color', '#ffffff');
 	
 	
 	//and modal stuff
-	//populate dropdowns for manual addition
-	if(!$.trim($('#primary-dropdown-ul').html())){
-		for(var i in colors){
-			$('#primary-dropdown-ul').append('<li id="primary-'+i+'">'+colors[i]+'</li>');
-			$('#primary-' + i).css("background-color", hex[i]);
-
-			$('#secondary-dropdown-ul').append('<li id="secondary-'+i+'">'+colors[i]+'</li>');
-			$('#secondary-' + i).css("background-color", hex[i]);
-			
-			$('#tertiary-dropdown-ul').append('<li id="tertiary-'+i+'">'+colors[i]+'</li>');
-			$('#tertiary-' + i).css("background-color", hex[i]);
-			
-			if(calculateLuminosity(hex[i]) < 60){
-				$('#primary-' +i).css('color', '#ffffff');
-				$('#secondary-' +i).css('color', '#ffffff');
-				$('#tertiary-' +i).css('color', '#ffffff');
-			}
-		}
-	}
-	//now populated, attach onclick
-	$(".dropdown-menu li").click(function(){
-		var selText = $(this).text();
-		var bgcolor = $(this).css("background-color");
-		var color = $(this).css("color");
-		//alert(selText);
-		$(this).parents('.btn-group').find('.dropdown-toggle').html(selText).css("color", color).css("background-color", bgcolor);
-    });
-	$('#manual-add').modal('show');
+	manualAdd();
+	
 }
 
 function manualAdd(){
 	//alert("going to populate");
 	//populate dropdowns for manual addition
-	if(!$.trim($('#primary-dropdown-ul').html())){
+	if(!($('#primary-0').length)){
 		for(var i in colors){
-			$('#primary-dropdown-ul').append('<li id="primary-'+i+'">'+colors[i]+'</li>');
+			$('#primary-dropdown').append('<option role="menuitem" class="color-option option" id="primary-'+i+'" >'+colors[i]+'</option>');
 			$('#primary-' + i).css("background-color", hex[i]);
 
-			$('#secondary-dropdown-ul').append('<li id="secondary-'+i+'">'+colors[i]+'</li>');
+			$('#secondary-dropdown').append('<option role="menuitem" class="color-option option" id="secondary-'+i+'">'+colors[i]+'</option>');
 			$('#secondary-' + i).css("background-color", hex[i]);
 			
-			$('#tertiary-dropdown-ul').append('<li id="tertiary-'+i+'">'+colors[i]+'</li>');
+			$('#tertiary-dropdown').append('<option role="menuitem" class="color-option option" id="tertiary-'+i+'">'+colors[i]+'</option>');
 			$('#tertiary-' + i).css("background-color", hex[i]);
 			
 			if(calculateLuminosity(hex[i]) < 60){
@@ -627,17 +604,19 @@ function manualAdd(){
 			}
 		}
 	}
-	//now populated, attach onclick
-	$(".dropdown-menu li").click(function(){
+	//now populated
+	 $('.selectpicker').selectpicker('refresh');
+	/*$("option").click(function(){
 		var selText = $(this).text();
 		var bgcolor = $(this).css("background-color");
 		var color = $(this).css("color");
 		//alert(selText);
 		$(this).parents('.btn-group').find('.dropdown-toggle').html(selText).css("color", color).css("background-color", bgcolor);
-    });
+    });*/
 	
 	$('#firstrun').modal('hide');
 	$('#manual-add').modal('show');
+	
 }
 
 function checkForStorage(){
