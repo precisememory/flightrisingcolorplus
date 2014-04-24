@@ -37,7 +37,7 @@
 						<h4 class="modal-title">No storage found!</h4>
 					</div>
 					<div class="modal-body">
-						<p>Your browser doesn't support local storage. You will have limited functionality until you switch to a more recent browser.</p>
+						<p>Your browser doesn't support local storage. This website isn't going to work until you switch to a more recent browser or enable local storage. :(</p>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" id="more-info-btn">More information</button>
@@ -232,9 +232,10 @@
 				<button type="button" class="btn btn-primary btn-lg" id="save">Save your dragons!</button>
 			  </div>
 			  <div class="row">
-				<button type="button" class="btn btn-danger" id="delete-all-btn" data-dismiss="modal">Delete all dragons</button>
+				<br/>
+				<button type="button" class="btn btn-danger btn-xs" id="delete-all-btn" data-dismiss="modal">Delete all dragons</button>
 			  </div>
-			  <h2><small>Click the save button to prevent losing your dragons when your cache is cleared. Right click on color predictor image once generated and you can save it, too!</small></h2>
+			  <h2><small>Click the save button to download a file and prevent losing your dragons when your cache is cleared. Right click on color predictor image once generated and you can save it, too!</small></h2>
 			
 			  <div class="row">
 				<div class="col-6 col-sm-6 col-lg-6 text-center" id="male-dragon">
@@ -260,7 +261,7 @@
 			  
 			  <div class="row" id="color-spread">
 				<div class="col-6 col-xs-9 col-sm-6">
-					<canvas id="canvas-color-spread" width=0 height=0>Canvas is not supported, this tool won't work for you.</canvas>
+					<canvas id="canvas-color-spread" width=0 height=0 download="dragoncolors.html">Canvas is not supported, this tool won't work for you.</canvas>
 				</div>
 			  </div> <!--/row-->
 			  

@@ -75,7 +75,7 @@ $(document).ready(function () {
   
   $('#more-info-btn').click(function(){
 	$('#storage').modal('hide');
-	$('#more-info').modal('show');
+	$('#storage2').modal('show');
   });
   
   if(!checkForStorage()){
