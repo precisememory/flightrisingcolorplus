@@ -82,7 +82,7 @@ footer {
 #sidebar button{
 	white-space: normal;
 }
-/*this isn't doing what I want yet */
-.dropdown-menu a.active {
-	background-color: #428BCA;
+
+.dropdown-menu > .active > a, .dropdown-menu > .active> a:hover, .dropdown-menu > .active > a:focus{
+	background-color: #428BCA !important;
 }

@@ -637,7 +637,9 @@ function populateAdd(){
 		var i = colorIndex($('#tertiary-dropdown').val()); 
 		$(this).css('background-color', hex[i]);
 	});
+
 }
+	
 
 function manualAdd(){
 	populateAdd();
