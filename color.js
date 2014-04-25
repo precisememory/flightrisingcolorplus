@@ -628,14 +628,21 @@ function populateAdd(){
 	$('.primary-group button').focusout(function(){
 		var i = colorIndex($('#primary-dropdown').val()); 
 		$(this).css('background-color', hex[i]);
+		
+		if(calculateLuminosity(hex[i]) < 60)
+			$(this).css('color', '#ffffff');
 	});	
 	$('.secondary-group button').focusout(function(){
 		var i = colorIndex($('#secondary-dropdown').val()); 
 		$(this).css('background-color', hex[i]);
+		if(calculateLuminosity(hex[i]) < 60)
+			$(this).css('color', '#ffffff');
 	});	
 	$('.tertiary-group button').focusout(function(){
 		var i = colorIndex($('#tertiary-dropdown').val()); 
 		$(this).css('background-color', hex[i]);
+		if(calculateLuminosity(hex[i]) < 60)
+			$(this).css('color', '#ffffff');
 	});
 
 }
