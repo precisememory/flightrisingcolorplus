@@ -567,21 +567,24 @@ function editDragon(dragon){
 	$('#new-name').val(dragon.name);
 	dragon.sex == 0 ? $('#sex-dropdown').selectpicker("val","M") : $('#sex-dropdown').selectpicker("val","F");
 	$('#primary-dropdown').selectpicker("val",colors[dragon.p]);
-	$('#primary-dropdown').css('background-color', hex[dragon.p] + " !important");
-	if(calculateLuminosity(hex[dragon.p]) < 60)
-		$('#primary-dropdown').css('color', '#ffffff');
-	
 	$('#secondary-dropdown').selectpicker("val",colors[dragon.s]);
-	$('#secondary-dropdown').css('background-color', hex[dragon.s]);
-	if(calculateLuminosity(hex[dragon.s]) < 60)
-		$('#secondary-dropdown').css('color', '#ffffff');
-		
 	$('#tertiary-dropdown').selectpicker("val",colors[dragon.t]);
-	$('#tertiary-dropdown').css('background-color', hex[dragon.t]);
-	if(calculateLuminosity(hex[dragon.t]) < 60)
-		$('#tertiary-dropdown').css('color', '#ffffff');
-	
 	$('.selectpicker').selectpicker("refresh");
+	
+	$('.primary-group button').css('background-color', hex[dragon.p]);
+	if(calculateLuminosity(hex[dragon.p]) < 60)
+		$('.primary-group button').css('color', '#ffffff');
+	
+	
+	$('.secondary-group button').css('background-color', hex[dragon.s]);
+	if(calculateLuminosity(hex[dragon.s]) < 60)
+		$('.secondary-group button').css('color', '#ffffff');
+		
+
+	$('.tertiary-group button').css('background-color', hex[dragon.t]);
+	if(calculateLuminosity(hex[dragon.t]) < 60)
+		$('.tertiary-group button').css('color', '#ffffff');
+	
 	//and modal stuff
 	manualAdd();
 	
@@ -618,6 +621,19 @@ function populateAdd(){
 		$('#secondary-dropdown').selectpicker("val","Secondary").css("background-color","#ffffff").css("color","#000000");
 		$('#tertiary-dropdown').selectpicker("val","Tertiary").css("background-color","#ffffff").css("color","#000000");
 	}
+	
+	$('.primary-group button').focusout(function(){
+		var i = colorIndex($('#primary-dropdown').val()); 
+		$(this).css('background-color', hex[i]);
+	});	
+	$('.secondary-group button').focusout(function(){
+		var i = colorIndex($('#secondary-dropdown').val()); 
+		$(this).css('background-color', hex[i]);
+	});	
+	$('.secondary-group button').focusout(function(){
+		var i = colorIndex($('#secondary-dropdown').val()); 
+		$(this).css('background-color', hex[i]);
+	});
 }
 
 function manualAdd(){
