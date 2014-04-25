@@ -488,9 +488,9 @@ function addToSidebar(dragon){
 								(dragon.sex == 0 ? 'male' : 'female') +
 								'" id="dragon-'+dragon.location+'"><h3>' + 
 								dragon.name + 
-								' (<span id="dragon-sex-'+dragon.location+'">' + 
+								' (<strong><span id="dragon-sex-'+dragon.location+'">' + 
 								(dragon.sex == 0 ? 'M' : 'F') + 
-								'</span>)</h3>' + /*'<ul> <li>Primary: ' + 
+								'</span></strong>)</h3>' + /*'<ul> <li>Primary: ' + 
 								colors[dragon.p] + 
 								'</li><li>Secondary: ' + 
 								colors[dragon.s] + 
