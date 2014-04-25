@@ -620,9 +620,12 @@ function populateAdd(){
 	 if(editIndex == -1){//reset dialog values to initial ones
 		$('#new-name').val("");
 		$('#sex-dropdown').selectpicker("val","Sex");
-		$('#primary-dropdown').selectpicker("val","Primary").css("background-color","#ffffff").css("color","#000000");
-		$('#secondary-dropdown').selectpicker("val","Secondary").css("background-color","#ffffff").css("color","#000000");
-		$('#tertiary-dropdown').selectpicker("val","Tertiary").css("background-color","#ffffff").css("color","#000000");
+		$('#primary-dropdown').selectpicker("val","Primary")
+		$('.primary-group button').css("background-color","#ffffff").css("color","#000000");
+		$('#secondary-dropdown').selectpicker("val","Secondary")
+		$('.secondary-group button').css("background-color","#ffffff").css("color","#000000");
+		$('#tertiary-dropdown').selectpicker("val","Tertiary")
+		$('.tertiary-group button').css("background-color","#ffffff").css("color","#000000");
 	}
 	
 	$('.primary-group button').focusout(function(){
