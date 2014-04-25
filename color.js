@@ -44,7 +44,7 @@ $('.selectpicker').selectpicker();
 	var canvas = document.getElementById("canvas-color-spread");
 // draw to canvas...
 	canvas.toBlob(function(blob) {
-		saveAs(blob, "dragoncolorimage.png");
+		saveAs(blob, "dragoncolor_"+male.name+ '_'+female.name+ ".png");
 	});
   });
   
