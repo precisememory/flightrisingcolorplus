@@ -464,7 +464,7 @@ function setUpDragons(string, offset){
 	//$('#sidebar-list').html('');
 	//numberDragons = 0;
 	for(var i in darray ){
-		if(darray[i] && darray[i] != ''){
+		if(darray[i] && $.trim(darray[i]) != ''){
 			i = parseInt(i);
 			//alert(darray[i]);
 			try{
