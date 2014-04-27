@@ -76,6 +76,9 @@ footer {
 
 #sidebar{
 	height: 90vh;
+}
+.list-group{
+	height: 80vh;
 	overflow: scroll;
 }
 
