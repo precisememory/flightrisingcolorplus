@@ -25,6 +25,7 @@ var editIndex = -1; //index of dragon we are editing, or -1
 var deleteMale = false; // checked only when deleting. false is delete female, true is delete male. 
 var deleteAll = false; // checked when deleting something. true if delete all. 
 var maleLock = false, femaleLock = false; //check if center dragon is locked in place
+var previousSearch = ""; // to remove prior search CSS we have to remember prior search when not in keypress function
 
 
 $(document).ready(function () {
@@ -35,6 +36,17 @@ $('.selectpicker').selectpicker();
   $('[data-toggle=offcanvas]').click(function () {
     $('.row-offcanvas').toggleClass('active')
   });
+
+ //set up search through sidebar
+$('#sidebar-search').keyup(function() {
+	if($(this).val().toLowerCase() == ""){
+		$('.searchable:not([data-index*="' + previousSearch + '"])').css('display', '');
+		return;
+	}
+	$('.searchable:not([data-index*="' + previousSearch + '"])').css('display', '');
+	$('.searchable:not([data-index*="' + $(this).val().toLowerCase() + '"])').css('display', 'none');
+	previousSearch = $(this).val().toLowerCase();
+});
  
   $('#save').click(function(){
 	var blob = new Blob([localStorage.getItem('frcolorplus')], {type: "text/plain;charset=utf-8"});
@@ -42,7 +54,6 @@ $('.selectpicker').selectpicker();
   });
   $('#canvas-color-spread').click(function(){
 	var canvas = document.getElementById("canvas-color-spread");
-// draw to canvas...
 	canvas.toBlob(function(blob) {
 		saveAs(blob, "dragoncolor_"+male.name+ '_'+female.name+ ".png");
 	});
@@ -484,8 +495,10 @@ function setUpDragons(string, offset){
 }
 
 function addToSidebar(dragon){
-	$('#sidebar-list').append( '<button type="button" class="btn btn-default btn-block list-group-item ' + 
+	$('#sidebar-list').append( '<button type="button" class="btn btn-default btn-block list-group-item searchable ' + 
 								(dragon.sex == 0 ? 'male' : 'female') +
+								'" data-index="' + 
+								dragon.name.toLowerCase() + colors[dragon.p]  + colors[dragon.s] + colors[dragon.t] + (dragon.sex == 0 ? 'm' : 'f') +
 								'" id="dragon-'+dragon.location+'"><h3>' + 
 								dragon.name + 
 								' (<strong><span id="dragon-sex-'+dragon.location+'">' + 
