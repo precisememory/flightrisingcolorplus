@@ -25,7 +25,7 @@ var editIndex = -1; //index of dragon we are editing, or -1
 var deleteMale = false; // checked only when deleting. false is delete female, true is delete male. 
 var deleteAll = false; // checked when deleting something. true if delete all. 
 var maleLock = false, femaleLock = false; //check if center dragon is locked in place
-var previousSearch = ""; // to remove prior search CSS we have to remember prior search when not in keypress function
+var previousSearch1 = "", previousSearch2 = ""; // to remove prior search CSS we have to remember prior search when not in keypress function
 
 
 $(document).ready(function () {
@@ -37,15 +37,42 @@ $('.selectpicker').selectpicker();
     $('.row-offcanvas').toggleClass('active')
   });
 
- //set up search through sidebar
+ //set up name search through sidebar
 $('#sidebar-search').keyup(function() {
 	if($(this).val().toLowerCase() == ""){
-		$('.searchable:not([data-index*="' + previousSearch + '"])').css('display', '');
+		$('.searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
 		return;
 	}
-	$('.searchable:not([data-index*="' + previousSearch + '"])').css('display', '');
-	$('.searchable:not([data-index*="' + $(this).val().toLowerCase() + '"])').css('display', 'none');
-	previousSearch = $(this).val().toLowerCase();
+	$('.searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
+	$('.searchable:not([data-name*="' + $(this).val().toLowerCase() + '"])').css('display', 'none');
+	previousSearch1 = $(this).val().toLowerCase();
+});
+
+//set up color search 
+$('#sidebar-search-color').keyup(function() {
+	if($(this).val().toLowerCase() == ""){
+		$('.searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
+		return;
+	}
+	$('.searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
+	$('.searchable:not([data-color*="' + $(this).val().toLowerCase() + '"])').css('display', 'none');
+	previousSearch2 = $(this).val().toLowerCase();
+});
+
+//checkboxes
+$('#male-check').click(function(){
+	if($(this).is(':checked')){
+		$('.male').css('display', '');
+	} else {
+		$('.male').css('display', 'none');
+	}
+});
+$('#female-check').click(function(){
+	if($(this).is(':checked')){
+		$('.female').css('display', '');
+	} else {
+		$('.female').css('display', 'none');
+	}
 });
  
   $('#save').click(function(){
@@ -497,8 +524,9 @@ function setUpDragons(string, offset){
 function addToSidebar(dragon){
 	$('#sidebar-list').append( '<button type="button" class="btn btn-default btn-block list-group-item searchable ' + 
 								(dragon.sex == 0 ? 'male' : 'female') +
-								'" data-index="' + 
-								dragon.name.toLowerCase() + colors[dragon.p]  + colors[dragon.s] + colors[dragon.t] + (dragon.sex == 0 ? 'm' : 'f') +
+								'" data-name="' + 
+								dragon.name.toLowerCase() +
+								'" data-color="'+ colors[dragon.p]  + ' '+ colors[dragon.s] + ' '+ colors[dragon.t] +
 								'" id="dragon-'+dragon.location+'"><h3>' + 
 								dragon.name + 
 								' (<strong><span id="dragon-sex-'+dragon.location+'">' + 
