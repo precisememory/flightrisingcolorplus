@@ -26,7 +26,7 @@ var deleteMale = false; // checked only when deleting. false is delete female, t
 var deleteAll = false; // checked when deleting something. true if delete all. 
 var maleLock = false, femaleLock = false; //check if center dragon is locked in place
 var previousSearch1 = "", previousSearch2 = ""; // to remove prior search CSS we have to remember prior search when not in keypress function
-
+var maleSelected = true, femaleSelected = true;
 
 $(document).ready(function () {
 //set up selectpicker
@@ -37,43 +37,13 @@ $('.selectpicker').selectpicker();
     $('.row-offcanvas').toggleClass('active')
   });
 
- //set up name search through sidebar
-$('#sidebar-search').keyup(function() {
-	if($(this).val().toLowerCase() == ""){
-		$('.searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
-		return;
-	}
-	$('.searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
-	$('.searchable:not([data-name*="' + $(this).val().toLowerCase() + '"])').css('display', 'none');
-	previousSearch1 = $(this).val().toLowerCase();
-});
-
-//set up color search 
-$('#sidebar-search-color').keyup(function() {
-	if($(this).val().toLowerCase() == ""){
-		$('.searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
-		return;
-	}
-	$('.searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
-	$('.searchable:not([data-color*="' + $(this).val().toLowerCase() + '"])').css('display', 'none');
-	previousSearch2 = $(this).val().toLowerCase();
-});
-
-//checkboxes
-$('#male-check').click(function(){
-	if($(this).is(':checked')){
-		$('.male').css('display', '');
-	} else {
-		$('.male').css('display', 'none');
-	}
-});
-$('#female-check').click(function(){
-	if($(this).is(':checked')){
-		$('.female').css('display', '');
-	} else {
-		$('.female').css('display', 'none');
-	}
-});
+	 //set up name search through sidebar
+	$('#sidebar-search').keyup(updateSidebar);
+	//set up color search 
+	$('#sidebar-search-color').keyup(updateSidebar);
+	//checkboxes
+	$('#male-check').click(updateSidebar);
+	$('#female-check').click(updateSidebar);
  
   $('#save').click(function(){
 	var blob = new Blob([localStorage.getItem('frcolorplus')], {type: "text/plain;charset=utf-8"});
@@ -142,6 +112,54 @@ $('#female-check').click(function(){
   }
   
 }); //end document ready
+
+function updateSidebar(){
+
+	if($('#male-check').is(':checked')){
+		maleSelected = true;
+		$('.male').css('display', '');
+	} else {
+		maleSelected = false;
+		$('.male').css('display', 'none');
+	}
+	
+	if($('#female-check').is(':checked')){
+		femaleSelected = true;
+		$('.female').css('display', '');
+	} else {
+		femaleSelected = false;
+		$('.female').css('display', 'none');
+	}
+
+	if(maleSelected){
+		if($('#sidebar-search').val().toLowerCase() == ""){
+			$('.male .searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
+		} 
+		if($('#sidebar-search-color').val().toLowerCase() == ""){
+			$('.male .searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
+		}
+		$('.male .searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
+		$('.male .searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
+	}
+	if(femaleSelected){
+		if($('#sidebar-search').val().toLowerCase() == ""){
+			$('.female .searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
+		}
+		if($('#sidebar-search-color').val().toLowerCase() == ""){
+			$('.female .searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
+		}
+		$('.female .searchable:not([data-name*="' + previousSearch1 + '"])').css('display', '');
+		$('.female .searchable:not([data-color*="' + previousSearch2 + '"])').css('display', '');
+	}
+	if($('#sidebar-search').val().toLowerCase() != ""){	
+		$('.searchable:not([data-name*="' + $('#sidebar-search').val().toLowerCase() + '"])').css('display', 'none');
+	} 
+	if($('#sidebar-search-color').val().toLowerCase() != ""){
+		$('.searchable:not([data-color*="' + $('#sidebar-search-color').val().toLowerCase() + '"])').css('display', 'none');
+	}
+	previousSearch1 = $('#sidebar-search').val().toLowerCase();
+	previousSearch2 = $('#sidebar-search-color').val().toLowerCase();
+}
 
 function femaleUpdateCenter(dragon, that){
 		
