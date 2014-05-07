@@ -540,7 +540,7 @@ function setUpDragons(string, offset){
 }
 
 function addToSidebar(dragon){
-	$('#sidebar-list').append( '<button type="button" class="btn btn-default btn-block list-group-item searchable ' + 
+	$('#sidebar-list').append( '<button type="button" class="btn btn-default btn-block list-group-item searchable draggable ' + 
 								(dragon.sex == 0 ? 'male' : 'female') +
 								'" data-name="' + 
 								dragon.name.toLowerCase() +
@@ -592,6 +592,25 @@ function addOnClick(dragon){
 		femaleUpdateCenter(dragon, this);
 	  });
 	}
+		//add drag and drop to reorder too
+	$( ".draggable" ).draggable({ 
+		appendTo: "#sidebar-list", 
+		axis: "y", 
+		containment: "parent", 
+		delay: 300, 
+		distance: 10, 
+		opacity: 0.5, 
+		snap: true, 
+		drag: function(event,ui){
+			reorderDragons();
+		}
+	});
+	
+}
+
+function reorderDragons(){
+ //TODO: reorder in local storage, reset all "location" vars and reload into sidebar
+	alert("in reorder fn");
 }
 
 function setOnClickSidebar(){ //this has to be called after all elements added
@@ -608,6 +627,19 @@ function setOnClickSidebar(){ //this has to be called after all elements added
 	femaleUpdateCenter(objectarray[n], this);
   });
   
+  	//add drag and drop to reorder too
+	$( ".draggable" ).draggable({ 
+		appendTo: "#sidebar-list",
+		axis: "y",
+		containment: "parent",
+		delay: 300,
+		distance: 10,
+		opacity: 0.5,
+		snap: true,
+		stop: function(event,ui){
+			reorderDragons();
+		}
+	});
 }
 function storeDragons(){ 
 	var s = "";
